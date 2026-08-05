@@ -1,0 +1,45 @@
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 12px;
+}
+
+.itemInput {
+  font-size: 0.9375rem;
+}
+
+.priceRow {
+  display: flex;
+  gap: 8px;
+}
+
+.priceRow .input {
+  flex: 1;
+}
+
+.priceRow .btn {
+  flex-shrink: 0;
+}
+
+.result {
+  margin-top: 14px;
+  padding: 12px 14px;
+  border-radius: var(--radius-sm);
+  font-size: 0.875rem;
+  line-height: 1.4;
+}
+
+.result p {
+  margin: 0;
+}
+
+.result[data-afford='true'] {
+  background: var(--accent-soft);
+  color: var(--accent);
+}
+
+.result[data-afford='false'] {
+  background: var(--negative-soft);
+  color: var(--negative);
+}

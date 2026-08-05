@@ -1,0 +1,48 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+
+:root {
+  /* Dark finance-app palette — soft charcoal, never pure black */
+  --page-bg: #0d0e15;
+  --bg: #12141c;
+  --card: #1c1f2a;
+  --card-raised: #242838;
+  --border: rgba(255, 255, 255, 0.08);
+  --border-strong: rgba(255, 255, 255, 0.14);
+
+  --text: #ffffff;
+  --text-muted: #9ca3af;
+  --text-faint: #6b7280;
+
+  --accent: #34d399;
+  --accent-soft: rgba(52, 211, 153, 0.14);
+  --negative: #f87171;
+  --negative-soft: rgba(248, 113, 113, 0.14);
+
+  /* Category badge palette — soft muted tints */
+  --cat-blue: #60a5fa;
+  --cat-blue-bg: rgba(96, 165, 250, 0.16);
+  --cat-purple: #a78bfa;
+  --cat-purple-bg: rgba(167, 139, 250, 0.16);
+  --cat-pink: #f472b6;
+  --cat-pink-bg: rgba(244, 114, 182, 0.16);
+  --cat-orange: #fb923c;
+  --cat-orange-bg: rgba(251, 146, 60, 0.16);
+  --cat-yellow: #fbbf24;
+  --cat-yellow-bg: rgba(251, 191, 36, 0.16);
+  --cat-green: #34d399;
+  --cat-green-bg: rgba(52, 211, 153, 0.16);
+  --cat-red: #f87171;
+  --cat-red-bg: rgba(248, 113, 113, 0.16);
+  --cat-gray: #9ca3af;
+  --cat-gray-bg: rgba(156, 163, 175, 0.16);
+
+  --font-display: 'Inter', system-ui, sans-serif;
+  --font-body: 'Inter', system-ui, sans-serif;
+  --font-mono: 'Inter', system-ui, sans-serif;
+
+  --radius: 16px;
+  --radius-sm: 10px;
+  --shadow-card: 0 8px 24px rgba(0, 0, 0, 0.35);
+
+  --phone-width: 430px;
+}

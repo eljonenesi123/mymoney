@@ -1,0 +1,44 @@
+.page {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  padding-top: 8px;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.scanNotice {
+  font-size: 0.8125rem;
+  color: var(--accent);
+  background: var(--accent-soft);
+  padding: 10px 12px;
+  border-radius: var(--radius-sm);
+  margin-top: -8px;
+}
+
+.error {
+  color: var(--negative);
+  font-size: 0.875rem;
+  margin: 0;
+}
+
+.addCategoryLink {
+  align-self: flex-start;
+  background: none;
+  border: none;
+  color: var(--accent);
+  font-size: 0.8125rem;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 4px 0;
+}
+
+.newCategoryRow {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}

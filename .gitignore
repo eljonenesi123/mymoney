@@ -1,0 +1,13 @@
+node_modules/
+.env
+.env.local
+dist/
+build/
+uploads/*
+!uploads/.gitkeep
+
+# OS / editor
+.DS_Store
+*.log
+.vscode/*
+!.vscode/extensions.json

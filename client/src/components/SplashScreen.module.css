@@ -1,0 +1,40 @@
+.splash {
+  position: fixed;
+  inset: 0;
+  max-width: var(--phone-width);
+  margin: 0 auto;
+  background: var(--bg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+  opacity: 1;
+  transition: opacity 0.35s ease;
+}
+
+.splash[data-fading='true'] {
+  opacity: 0;
+}
+
+.logo {
+  width: 96px;
+  height: 96px;
+  animation: pop 0.5s ease;
+}
+
+@keyframes pop {
+  from {
+    opacity: 0;
+    transform: scale(0.85);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .logo {
+    animation: none;
+  }
+}
