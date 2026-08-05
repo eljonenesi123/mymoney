@@ -1,5 +1,10 @@
-const CACHE_VERSION = 'mymoney-v2';
-const APP_SHELL = ['/', '/manifest.json', '/icon-192.png', '/icon-512.png'];
+const CACHE_VERSION = 'mymoney-v3';
+
+// Deployed at the site root locally, but under /mymoney/ on GitHub Pages —
+// derive the app's base path from this script's own URL so caching works
+// in both places without hardcoding either one.
+const BASE = self.location.pathname.replace(/sw\.js$/, '');
+const APP_SHELL = [BASE, `${BASE}manifest.json`, `${BASE}icon-192.png`, `${BASE}icon-512.png`];
 
 self.addEventListener('install', (event) => {
   event.waitUntil(
@@ -23,23 +28,24 @@ self.addEventListener('fetch', (event) => {
 
   const url = new URL(request.url);
 
-  // Navigations: network-first, fall back to cached app shell when offline.
+  // Navigations: network-first, fall back to the cached app shell when offline.
   if (request.mode === 'navigate') {
     event.respondWith(
       fetch(request)
         .then((response) => {
           const copy = response.clone();
-          caches.open(CACHE_VERSION).then((cache) => cache.put('/', copy));
+          caches.open(CACHE_VERSION).then((cache) => cache.put(BASE, copy));
           return response;
         })
-        .catch(() => caches.match('/')),
+        .catch(() => caches.match(BASE)),
     );
     return;
   }
 
-  // Same-origin API reads: network-first, cache successful GETs so recently
-  // viewed data (expenses, categories) is available offline.
-  if (url.origin === self.location.origin && url.pathname.startsWith('/api/')) {
+  // API reads (often a different origin than the static site, e.g. GitHub
+  // Pages frontend + Render backend): network-first, cache successful GETs
+  // so recently viewed data stays available offline.
+  if (url.pathname.includes('/api/')) {
     event.respondWith(
       fetch(request)
         .then((response) => {
