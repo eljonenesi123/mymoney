@@ -27,11 +27,19 @@ export function UserProvider({ children }) {
     return () => window.removeEventListener('auth:signed-out', handleSignedOut);
   }, []);
 
-  async function register(username, email, password) {
-    const res = await api.post('/auth/register', { username, email, password });
+  async function startRegister(username, email, password) {
+    await api.post('/auth/register/start', { username, email, password });
+  }
+
+  async function verifyRegister(email, code) {
+    const res = await api.post('/auth/register/verify', { email, code });
     setToken(res.data.token);
     setUser(res.data.user);
     return res.data.user;
+  }
+
+  function resendRegisterCode(email) {
+    return api.post('/auth/register/resend', { email });
   }
 
   async function login(username, password) {
@@ -48,10 +56,18 @@ export function UserProvider({ children }) {
     return res.data.user;
   }
 
-  async function upgradeGuest(username, email, password) {
-    const res = await api.post('/auth/upgrade', { username, email, password });
+  async function startUpgrade(username, email, password) {
+    await api.post('/auth/upgrade/start', { username, email, password });
+  }
+
+  async function verifyUpgrade(code) {
+    const res = await api.post('/auth/upgrade/verify', { code });
     setUser(res.data);
     return res.data;
+  }
+
+  function resendUpgradeCode() {
+    return api.post('/auth/upgrade/resend');
   }
 
   async function updateUser(updates) {
@@ -67,7 +83,20 @@ export function UserProvider({ children }) {
 
   return (
     <UserContext.Provider
-      value={{ user, loading, register, login, continueAsGuest, upgradeGuest, updateUser, logout }}
+      value={{
+        user,
+        loading,
+        startRegister,
+        verifyRegister,
+        resendRegisterCode,
+        login,
+        continueAsGuest,
+        startUpgrade,
+        verifyUpgrade,
+        resendUpgradeCode,
+        updateUser,
+        logout,
+      }}
     >
       {children}
     </UserContext.Provider>

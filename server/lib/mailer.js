@@ -6,7 +6,7 @@ function getTransporter() {
   if (transporter !== undefined) return transporter;
 
   if (!process.env.EMAIL_USER || !process.env.EMAIL_PASS) {
-    console.warn('EMAIL_USER/EMAIL_PASS not set — welcome emails will be skipped');
+    console.warn('EMAIL_USER/EMAIL_PASS not set — verification emails cannot be sent');
     transporter = null;
     return transporter;
   }
@@ -21,7 +21,7 @@ function getTransporter() {
   return transporter;
 }
 
-function welcomeEmailHtml(name) {
+function verificationEmailHtml(code) {
   return `
     <div style="background:#f3f4f6;padding:32px 16px;font-family:-apple-system,Segoe UI,Roboto,sans-serif;">
       <div style="max-width:420px;margin:0 auto;background:#ffffff;border-radius:16px;overflow:hidden;border:1px solid #e5e7eb;">
@@ -29,18 +29,16 @@ function welcomeEmailHtml(name) {
           <span style="display:inline-block;width:10px;height:10px;border-radius:999px;background:#34d399;margin-right:8px;"></span>
           <span style="color:#ffffff;font-size:18px;font-weight:800;">MyMoney</span>
         </div>
-        <div style="padding:28px 24px;">
-          <h1 style="margin:0 0 12px;font-size:22px;color:#111827;">Welcome, ${name}.</h1>
-          <p style="margin:0 0 16px;font-size:15px;line-height:1.5;color:#4b5563;">
-            Your account is ready. A few things you can do right away:
+        <div style="padding:28px 24px;text-align:center;">
+          <h1 style="margin:0 0 12px;font-size:20px;color:#111827;">Confirm your email</h1>
+          <p style="margin:0 0 24px;font-size:15px;line-height:1.5;color:#4b5563;">
+            Enter this code in the app to finish creating your account.
           </p>
-          <ul style="margin:0 0 20px;padding-left:20px;font-size:15px;line-height:1.7;color:#4b5563;">
-            <li>Scan a receipt and let the app pull out the amount and merchant for you</li>
-            <li>Set your monthly income to get real "can I afford this?" answers</li>
-            <li>Check Insights for a breakdown of where your money's actually going</li>
-          </ul>
-          <p style="margin:0;font-size:13px;color:#9ca3af;">
-            If you didn't create this account, you can ignore this email.
+          <div style="display:inline-block;background:#f3f4f6;border-radius:12px;padding:16px 28px;letter-spacing:8px;font-size:28px;font-weight:800;color:#111827;font-family:ui-monospace,monospace;">
+            ${code}
+          </div>
+          <p style="margin:24px 0 0;font-size:13px;color:#9ca3af;">
+            This code expires in 10 minutes. If you didn't request this, you can ignore this email.
           </p>
         </div>
       </div>
@@ -48,20 +46,21 @@ function welcomeEmailHtml(name) {
   `;
 }
 
-export async function sendWelcomeEmail(to, name) {
+// Throws on failure (unlike a fire-and-forget notification) — the whole
+// point of this flow is that an account only gets created once the code
+// is confirmed delivered and entered correctly, so the caller needs to
+// know if sending genuinely failed.
+export async function sendVerificationCode(to, code) {
   const t = getTransporter();
-  if (!t) return;
-
-  try {
-    await t.sendMail({
-      from: `"MyMoney" <${process.env.EMAIL_USER}>`,
-      to,
-      subject: 'Welcome to MyMoney',
-      html: welcomeEmailHtml(name),
-      text: `Welcome, ${name}. Your MyMoney account is ready — scan a receipt, set your monthly income, and check Insights to see where your money's going.`,
-    });
-  } catch (err) {
-    // A failed welcome email should never block account creation.
-    console.error('Failed to send welcome email:', err.message);
+  if (!t) {
+    throw new Error('Email sending is not configured on the server');
   }
+
+  await t.sendMail({
+    from: `"MyMoney" <${process.env.EMAIL_USER}>`,
+    to,
+    subject: `${code} is your MyMoney verification code`,
+    html: verificationEmailHtml(code),
+    text: `Your MyMoney verification code is ${code}. It expires in 10 minutes.`,
+  });
 }
