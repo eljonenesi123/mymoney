@@ -6,6 +6,7 @@ import styles from './Onboarding.module.css';
 function Onboarding() {
   const [mode, setMode] = useState('choose'); // choose | signup | signin | guest | income
   const [username, setUsername] = useState('');
+  const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [name, setName] = useState('');
@@ -28,7 +29,7 @@ function Onboarding() {
     setSubmitting(true);
     setError('');
     try {
-      await register(username.trim(), password);
+      await register(username.trim(), email.trim(), password);
       setSubmitting(false);
       setMode('income');
     } catch (err) {
@@ -148,6 +149,21 @@ function Onboarding() {
               className="input"
             />
           </div>
+          {isSignUp && (
+            <div className="field">
+              <label htmlFor="email">Email</label>
+              <input
+                id="email"
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                placeholder="you@example.com"
+                autoCapitalize="none"
+                autoCorrect="off"
+                className="input"
+              />
+            </div>
+          )}
           <div className="field">
             <label htmlFor="password">Password</label>
             <input
@@ -175,7 +191,7 @@ function Onboarding() {
           {error && <p className={styles.error}>{error}</p>}
           <button
             type="submit"
-            disabled={submitting || !username.trim() || !password}
+            disabled={submitting || !username.trim() || !password || (isSignUp && !email.trim())}
             className="btn btn-primary"
           >
             {submitting ? 'Please wait…' : isSignUp ? 'Create account' : 'Sign in'}

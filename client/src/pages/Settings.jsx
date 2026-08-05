@@ -18,6 +18,7 @@ function Settings() {
   const [error, setError] = useState('');
 
   const [upgradeUsername, setUpgradeUsername] = useState('');
+  const [upgradeEmail, setUpgradeEmail] = useState('');
   const [upgradePassword, setUpgradePassword] = useState('');
   const [upgrading, setUpgrading] = useState(false);
   const [upgradeError, setUpgradeError] = useState('');
@@ -42,7 +43,7 @@ function Settings() {
     setUpgrading(true);
     setUpgradeError('');
     try {
-      await upgradeGuest(upgradeUsername.trim(), upgradePassword);
+      await upgradeGuest(upgradeUsername.trim(), upgradeEmail.trim(), upgradePassword);
     } catch (err) {
       setUpgradeError(err.response?.data?.error || "Couldn't create your account. Try again.");
     } finally {
@@ -65,6 +66,7 @@ function Settings() {
       <div className={`card ${styles.card}`}>
         <span className="eyebrow">{user?.isGuest ? 'Guest name' : 'Username'}</span>
         <p className={styles.name}>{user?.isGuest ? user?.name : user?.username}</p>
+        {!user?.isGuest && user?.email && <p className={styles.email}>{user.email}</p>}
       </div>
 
       {user?.isGuest && (
@@ -88,6 +90,19 @@ function Settings() {
             />
           </div>
           <div className="field">
+            <label htmlFor="upgradeEmail">Email</label>
+            <input
+              id="upgradeEmail"
+              type="email"
+              value={upgradeEmail}
+              onChange={(e) => setUpgradeEmail(e.target.value)}
+              placeholder="you@example.com"
+              autoCapitalize="none"
+              autoCorrect="off"
+              className="input"
+            />
+          </div>
+          <div className="field">
             <label htmlFor="upgradePassword">Password</label>
             <input
               id="upgradePassword"
@@ -102,7 +117,7 @@ function Settings() {
           <button
             type="submit"
             className="btn btn-primary"
-            disabled={upgrading || !upgradeUsername.trim() || !upgradePassword}
+            disabled={upgrading || !upgradeUsername.trim() || !upgradeEmail.trim() || !upgradePassword}
           >
             {upgrading ? 'Creating…' : 'Create account'}
           </button>

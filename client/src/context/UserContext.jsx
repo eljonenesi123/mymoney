@@ -27,8 +27,8 @@ export function UserProvider({ children }) {
     return () => window.removeEventListener('auth:signed-out', handleSignedOut);
   }, []);
 
-  async function register(username, password) {
-    const res = await api.post('/auth/register', { username, password });
+  async function register(username, email, password) {
+    const res = await api.post('/auth/register', { username, email, password });
     setToken(res.data.token);
     setUser(res.data.user);
     return res.data.user;
@@ -48,8 +48,8 @@ export function UserProvider({ children }) {
     return res.data.user;
   }
 
-  async function upgradeGuest(username, password) {
-    const res = await api.post('/auth/upgrade', { username, password });
+  async function upgradeGuest(username, email, password) {
+    const res = await api.post('/auth/upgrade', { username, email, password });
     setUser(res.data);
     return res.data;
   }
