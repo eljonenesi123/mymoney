@@ -13,18 +13,19 @@ function daysAgo(n) {
   return new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate() - n));
 }
 
-function CustomTooltip({ active, payload, label }) {
+function CustomTooltip({ active, payload, label, currency }) {
   if (!active || !payload?.length) return null;
   return (
     <div className={styles.tooltip}>
       <strong>{label}</strong>
-      <span className="amount">{formatCurrency(payload[0].value)}</span>
+      <span className="amount">{formatCurrency(payload[0].value, currency)}</span>
     </div>
   );
 }
 
 function Insights() {
   const { user } = useUser();
+  const currency = user?.currency || 'ALL';
   const [expenses, setExpenses] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -88,7 +89,7 @@ function Insights() {
           <div className={styles.statRow}>
             <div className={`card ${styles.stat}`}>
               <span className="eyebrow">Daily average</span>
-              <span className="amount">{formatCurrency(dailyAvg)}</span>
+              <span className="amount">{formatCurrency(dailyAvg, currency)}</span>
             </div>
             <div className={`card ${styles.stat}`}>
               <span className="eyebrow">Top category</span>
@@ -115,7 +116,7 @@ function Insights() {
                     tick={{ fontSize: 11, fill: '#9ca3af' }}
                   />
                   <YAxis hide domain={[0, 'dataMax']} />
-                  <Tooltip content={<CustomTooltip />} cursor={{ stroke: 'rgba(255,255,255,0.15)', strokeWidth: 1 }} />
+                  <Tooltip content={<CustomTooltip currency={currency} />} cursor={{ stroke: 'rgba(255,255,255,0.15)', strokeWidth: 1 }} />
                   <Area
                     type="monotone"
                     dataKey="total"
@@ -137,7 +138,7 @@ function Insights() {
                 <li key={c.name} className={styles.breakdownRow}>
                   <div className={styles.breakdownHead}>
                     <span className={styles.breakdownName}>{c.name}</span>
-                    <span className="amount">{formatCurrency(c.value)}</span>
+                    <span className="amount">{formatCurrency(c.value, currency)}</span>
                   </div>
                   <div className={styles.barTrack}>
                     <div

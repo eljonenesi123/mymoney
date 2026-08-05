@@ -15,6 +15,7 @@ const RANGE_OPTIONS = [
 
 function ExpenseHistory() {
   const { user } = useUser();
+  const currency = user?.currency || 'ALL';
   const [categories, setCategories] = useState([]);
   const [expenses, setExpenses] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -85,7 +86,7 @@ function ExpenseHistory() {
       {!loading && expenses.length > 0 && (
         <div className={styles.totalRow}>
           <span className="eyebrow">Total</span>
-          <span className={`amount ${styles.totalAmount}`}>{formatCurrency(total)}</span>
+          <span className={`amount ${styles.totalAmount}`}>{formatCurrency(total, currency)}</span>
         </div>
       )}
 
@@ -114,7 +115,7 @@ function ExpenseHistory() {
                 </div>
               </div>
               <div className={styles.rowEnd}>
-                <span className="amount">−{formatCurrency(expense.amount)}</span>
+                <span className="amount">−{formatCurrency(expense.amount, currency)}</span>
                 <button
                   type="button"
                   className={styles.deleteButton}

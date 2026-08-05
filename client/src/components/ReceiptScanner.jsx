@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { createWorker } from 'tesseract.js';
 import { parseReceiptText } from '../lib/parseReceipt.js';
+import { preprocessReceiptImage } from '../lib/imagePreprocess.js';
 import styles from './ReceiptScanner.module.css';
 
 function ReceiptScanner({ onScanned, autoOpen }) {
@@ -23,6 +24,13 @@ function ReceiptScanner({ onScanned, autoOpen }) {
     setProgress(0);
 
     try {
+      // Grayscale + contrast-stretch the photo before OCR — phone shots of
+      // thermal-printer receipts are often small, dim, or slightly
+      // off-angle, and this reads noticeably more reliably than the raw
+      // camera output. Falls back to the original file if this fails for
+      // any reason (e.g. an unsupported image format).
+      const ocrInput = await preprocessReceiptImage(file).catch(() => file);
+
       // Albanian receipts mix Latin numerals/prices with Albanian store
       // names and words ("Totali", "Kesh") — recognizing both scripts
       // together reads more reliably than English alone.
@@ -33,12 +41,12 @@ function ReceiptScanner({ onScanned, autoOpen }) {
           }
         },
       });
-      const { data } = await worker.recognize(file);
+      const { data } = await worker.recognize(ocrInput);
       await worker.terminate();
 
-      const { amount, merchant } = parseReceiptText(data.text);
+      const { amount, merchant, item } = parseReceiptText(data.text);
       setStatus('idle');
-      onScanned({ amount, merchant, file, rawText: data.text });
+      onScanned({ amount, merchant, item, file, rawText: data.text });
     } catch {
       setStatus('error');
     }

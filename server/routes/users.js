@@ -34,10 +34,11 @@ router.get('/:id', async (req, res, next) => {
 
 router.patch('/:id', async (req, res, next) => {
   try {
-    const { monthlyIncome, name } = req.body;
+    const { monthlyIncome, name, currency } = req.body;
     const update = {};
     if (monthlyIncome != null) update.monthlyIncome = Number(monthlyIncome);
     if (name != null && name.trim()) update.name = name.trim();
+    if (currency != null) update.currency = currency;
 
     const user = await User.findByIdAndUpdate(req.params.id, update, {
       new: true,

@@ -14,6 +14,7 @@ function todayInputValue() {
 
 function AddExpense() {
   const { user } = useUser();
+  const currency = user?.currency || 'ALL';
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const autoOpenScan = searchParams.get('scan') === '1';
@@ -40,7 +41,7 @@ function AddExpense() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user]);
 
-  function handleScanned({ amount: scannedAmount, merchant: scannedMerchant, file }) {
+  function handleScanned({ amount: scannedAmount, merchant: scannedMerchant, item: scannedItem, file }) {
     setReceiptFile(file);
     const found = [];
     if (scannedAmount != null) {
@@ -51,9 +52,13 @@ function AddExpense() {
       setMerchant(scannedMerchant);
       found.push('merchant');
     }
+    if (scannedItem) {
+      setNote(scannedItem);
+      found.push('item');
+    }
     setScanNotice(
       found.length
-        ? `Filled in ${found.join(' and ')} from the receipt — check it over.`
+        ? `Filled in ${found.join(', ')} from the receipt — check it over.`
         : "Couldn't make out the total — fill it in below.",
     );
   }
@@ -128,12 +133,12 @@ function AddExpense() {
           <input
             id="amount"
             type="number"
-            inputMode="numeric"
-            step="1"
+            inputMode={currency === 'ALL' ? 'numeric' : 'decimal'}
+            step={currency === 'ALL' ? '1' : '0.01'}
             min="0"
             value={amount}
             onChange={(e) => setAmount(e.target.value)}
-            placeholder="0 Lekë"
+            placeholder={currency === 'ALL' ? '0 Lekë' : '0.00 €'}
             className="input"
             required
           />

@@ -12,19 +12,20 @@ function startOfMonth() {
   return new Date(d.getFullYear(), d.getMonth(), 1);
 }
 
-function CustomTooltip({ active, payload }) {
+function CustomTooltip({ active, payload, currency }) {
   if (!active || !payload?.length) return null;
   const item = payload[0];
   return (
     <div className={styles.tooltip}>
       <strong>{item.name}</strong>
-      <span className="amount">{formatCurrency(item.value)}</span>
+      <span className="amount">{formatCurrency(item.value, currency)}</span>
     </div>
   );
 }
 
 function Dashboard() {
   const { user } = useUser();
+  const currency = user?.currency || 'ALL';
   const [expenses, setExpenses] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -63,7 +64,7 @@ function Dashboard() {
 
       <div className={`card ${styles.totalCard}`}>
         <span className="eyebrow">Total spent</span>
-        <span className={styles.totalAmount}>{formatCurrency(total)}</span>
+        <span className={styles.totalAmount}>{formatCurrency(total, currency)}</span>
         <hr className="tally-rule" />
         <span className={styles.totalMeta}>{expenses.length} {expenses.length === 1 ? 'expense' : 'expenses'} logged</span>
       </div>
@@ -88,7 +89,7 @@ function Dashboard() {
                       <Cell key={entry.name} fill={entry.color} />
                     ))}
                   </Pie>
-                  <Tooltip content={<CustomTooltip />} />
+                  <Tooltip content={<CustomTooltip currency={currency} />} />
                 </PieChart>
               </ResponsiveContainer>
             </div>
@@ -97,7 +98,7 @@ function Dashboard() {
                 <li key={c.name} className={styles.legendItem}>
                   <span className={styles.legendDot} style={{ background: c.color }} />
                   <span className={styles.legendName}>{c.name}</span>
-                  <span className={styles.legendValue}>{formatCurrency(c.value)}</span>
+                  <span className={styles.legendValue}>{formatCurrency(c.value, currency)}</span>
                 </li>
               ))}
             </ul>
@@ -105,7 +106,7 @@ function Dashboard() {
         </div>
       )}
 
-      <AffordabilityCheck remainingBudget={(user?.monthlyIncome || 0) - total} />
+      <AffordabilityCheck remainingBudget={(user?.monthlyIncome || 0) - total} currency={currency} />
 
       <div>
         <div className={styles.sectionHead}>
@@ -135,7 +136,7 @@ function Dashboard() {
                   <span className={styles.recentMerchant}>{e.merchant || e.category?.name}</span>
                   <span className={styles.recentMeta}>{formatDate(e.date)}</span>
                 </div>
-                <span className="amount">−{formatCurrency(e.amount)}</span>
+                <span className="amount">−{formatCurrency(e.amount, currency)}</span>
               </li>
             ))}
           </ul>

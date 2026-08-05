@@ -3,10 +3,16 @@ import { useNavigate } from 'react-router-dom';
 import { useUser } from '../context/UserContext.jsx';
 import styles from './Settings.module.css';
 
+const CURRENCIES = [
+  { code: 'ALL', label: 'Lek (ALL)' },
+  { code: 'EUR', label: 'Euro (€)' },
+];
+
 function Settings() {
   const { user, updateUser } = useUser();
   const navigate = useNavigate();
   const [income, setIncome] = useState(user?.monthlyIncome ?? '');
+  const [currency, setCurrency] = useState(user?.currency ?? 'ALL');
   const [saving, setSaving] = useState(false);
   const [saved, setSaved] = useState(false);
   const [error, setError] = useState('');
@@ -17,7 +23,7 @@ function Settings() {
     setError('');
     setSaved(false);
     try {
-      await updateUser({ monthlyIncome: income ? parseFloat(income) : 0 });
+      await updateUser({ monthlyIncome: income ? parseFloat(income) : 0, currency });
       setSaved(true);
     } catch {
       setError("Couldn't save. Try again.");
@@ -39,6 +45,23 @@ function Settings() {
       </div>
 
       <form onSubmit={handleSubmit} className={`card ${styles.form}`}>
+        <div className="field">
+          <label htmlFor="currency">Currency</label>
+          <select
+            id="currency"
+            value={currency}
+            onChange={(e) => {
+              setCurrency(e.target.value);
+              setSaved(false);
+            }}
+            className="select"
+          >
+            {CURRENCIES.map((c) => (
+              <option key={c.code} value={c.code}>{c.label}</option>
+            ))}
+          </select>
+        </div>
+
         <div className="field">
           <label htmlFor="income">Monthly income</label>
           <input
