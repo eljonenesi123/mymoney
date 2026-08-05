@@ -44,15 +44,15 @@ function Settings() {
           <input
             id="income"
             type="number"
-            inputMode="decimal"
+            inputMode="numeric"
             min="0"
-            step="0.01"
+            step="1"
             value={income}
             onChange={(e) => {
               setIncome(e.target.value);
               setSaved(false);
             }}
-            placeholder="e.g. 4200"
+            placeholder="e.g. 120000"
             className="input"
           />
         </div>

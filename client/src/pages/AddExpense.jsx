@@ -128,12 +128,12 @@ function AddExpense() {
           <input
             id="amount"
             type="number"
-            inputMode="decimal"
-            step="0.01"
+            inputMode="numeric"
+            step="1"
             min="0"
             value={amount}
             onChange={(e) => setAmount(e.target.value)}
-            placeholder="0.00"
+            placeholder="0 Lekë"
             className="input"
             required
           />

@@ -1,5 +1,13 @@
 export function formatCurrency(amount) {
-  return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(amount || 0);
+  // Albanian Lek is practically always used as whole numbers (no coins in
+  // everyday circulation), so no decimal places rather than the ISO
+  // default of 2.
+  return new Intl.NumberFormat('sq-AL', {
+    style: 'currency',
+    currency: 'ALL',
+    minimumFractionDigits: 0,
+    maximumFractionDigits: 0,
+  }).format(amount || 0);
 }
 
 export function formatDate(date) {
