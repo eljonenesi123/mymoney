@@ -2,6 +2,7 @@ import 'dotenv/config';
 import express from 'express';
 import cors from 'cors';
 import { connectDB } from './config/db.js';
+import authRouter from './routes/auth.js';
 import usersRouter from './routes/users.js';
 import notificationsRouter from './routes/notifications.js';
 import expensesRouter from './routes/expenses.js';
@@ -34,6 +35,7 @@ app.get('/api/health', (req, res) => {
   res.json({ status: 'ok' });
 });
 
+app.use('/api/auth', authRouter);
 app.use('/api/users', usersRouter);
 app.use('/api/notifications', notificationsRouter);
 app.use('/api/expenses', expensesRouter);
@@ -47,6 +49,9 @@ app.use((err, req, res, next) => {
 
 async function start() {
   try {
+    if (!process.env.JWT_SECRET) {
+      throw new Error('JWT_SECRET is not set in environment variables');
+    }
     await connectDB();
     await ensureDefaultCategories();
     app.listen(PORT, () => {

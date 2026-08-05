@@ -48,3 +48,24 @@
 .skipLink:hover {
   color: var(--text);
 }
+
+.choiceStack {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.guestLink {
+  background: none;
+  border: none;
+  color: var(--text-muted);
+  font-size: 0.875rem;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 8px 0;
+  text-align: center;
+}
+
+.guestLink:hover {
+  color: var(--text);
+}

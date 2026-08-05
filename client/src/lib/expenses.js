@@ -1,7 +1,7 @@
 import api from './api.js';
 
-export function listExpenses(userId, filters = {}) {
-  return api.get('/expenses', { params: { userId, ...filters } }).then((res) => res.data);
+export function listExpenses(filters = {}) {
+  return api.get('/expenses', { params: filters }).then((res) => res.data);
 }
 
 export function createExpense(payload) {

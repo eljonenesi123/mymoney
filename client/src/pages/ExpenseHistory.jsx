@@ -24,7 +24,7 @@ function ExpenseHistory() {
 
   useEffect(() => {
     if (!user) return;
-    listCategories(user._id).then(setCategories);
+    listCategories().then(setCategories);
   }, [user]);
 
   useEffect(() => {
@@ -37,7 +37,7 @@ function ExpenseHistory() {
       start.setDate(start.getDate() - Number(rangeFilter));
       filters.startDate = start.toISOString();
     }
-    listExpenses(user._id, filters)
+    listExpenses(filters)
       .then(setExpenses)
       .finally(() => setLoading(false));
   }, [user, categoryFilter, rangeFilter]);
@@ -50,7 +50,7 @@ function ExpenseHistory() {
       await deleteExpense(id);
     } catch {
       // refetch on failure to stay consistent
-      listExpenses(user._id).then(setExpenses);
+      listExpenses().then(setExpenses);
     }
   }
 

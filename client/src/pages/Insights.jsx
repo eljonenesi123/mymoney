@@ -31,7 +31,7 @@ function Insights() {
 
   useEffect(() => {
     if (!user) return;
-    listExpenses(user._id, { startDate: daysAgo(30).toISOString() })
+    listExpenses({ startDate: daysAgo(30).toISOString() })
       .then(setExpenses)
       .finally(() => setLoading(false));
   }, [user]);

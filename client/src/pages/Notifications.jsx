@@ -27,10 +27,10 @@ function Notifications() {
 
   useEffect(() => {
     if (!user) return;
-    generateNotifications(user._id)
+    generateNotifications()
       .catch(() => {})
       .finally(() => {
-        listNotifications(user._id)
+        listNotifications()
           .then(setNotifications)
           .finally(() => setLoading(false));
       });

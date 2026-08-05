@@ -1,16 +1,15 @@
 import { Router } from 'express';
 import Category from '../models/Category.js';
+import { requireAuth } from '../middleware/auth.js';
 
 const router = Router();
 
+router.use(requireAuth);
+
 router.get('/', async (req, res, next) => {
   try {
-    const { userId } = req.query;
-    if (!userId) {
-      return res.status(400).json({ error: 'userId is required' });
-    }
     const categories = await Category.find({
-      $or: [{ isDefault: true }, { userId }],
+      $or: [{ isDefault: true }, { userId: req.userId }],
     }).sort({ isDefault: -1, name: 1 });
     res.json(categories);
   } catch (err) {
@@ -20,15 +19,15 @@ router.get('/', async (req, res, next) => {
 
 router.post('/', async (req, res, next) => {
   try {
-    const { name, icon, color, userId } = req.body;
-    if (!name || !userId) {
-      return res.status(400).json({ error: 'name and userId are required' });
+    const { name, icon, color } = req.body;
+    if (!name) {
+      return res.status(400).json({ error: 'name is required' });
     }
     const category = await Category.create({
       name: name.trim(),
       icon: icon || '🏷️',
-      color: color || '#6366f1',
-      userId,
+      color: color || '#60a5fa',
+      userId: req.userId,
       isDefault: false,
     });
     res.status(201).json(category);
@@ -39,7 +38,7 @@ router.post('/', async (req, res, next) => {
 
 router.delete('/:id', async (req, res, next) => {
   try {
-    const category = await Category.findOne({ _id: req.params.id, isDefault: false });
+    const category = await Category.findOne({ _id: req.params.id, userId: req.userId, isDefault: false });
     if (!category) {
       return res.status(404).json({ error: 'Category not found or cannot be deleted' });
     }

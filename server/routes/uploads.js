@@ -2,6 +2,7 @@ import { Router } from 'express';
 import multer from 'multer';
 import path from 'node:path';
 import crypto from 'node:crypto';
+import { requireAuth } from '../middleware/auth.js';
 
 const router = Router();
 
@@ -24,7 +25,7 @@ const upload = multer({
   },
 });
 
-router.post('/receipt', upload.single('receipt'), (req, res) => {
+router.post('/receipt', requireAuth, upload.single('receipt'), (req, res) => {
   if (!req.file) {
     return res.status(400).json({ error: 'No file uploaded' });
   }

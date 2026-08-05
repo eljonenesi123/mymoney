@@ -31,7 +31,7 @@ function Dashboard() {
 
   useEffect(() => {
     if (!user) return;
-    listExpenses(user._id, { startDate: startOfMonth().toISOString() })
+    listExpenses({ startDate: startOfMonth().toISOString() })
       .then(setExpenses)
       .finally(() => setLoading(false));
   }, [user]);

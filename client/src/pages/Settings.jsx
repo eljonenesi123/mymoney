@@ -9,13 +9,18 @@ const CURRENCIES = [
 ];
 
 function Settings() {
-  const { user, updateUser } = useUser();
+  const { user, updateUser, upgradeGuest, logout } = useUser();
   const navigate = useNavigate();
   const [income, setIncome] = useState(user?.monthlyIncome ?? '');
   const [currency, setCurrency] = useState(user?.currency ?? 'ALL');
   const [saving, setSaving] = useState(false);
   const [saved, setSaved] = useState(false);
   const [error, setError] = useState('');
+
+  const [upgradeUsername, setUpgradeUsername] = useState('');
+  const [upgradePassword, setUpgradePassword] = useState('');
+  const [upgrading, setUpgrading] = useState(false);
+  const [upgradeError, setUpgradeError] = useState('');
 
   async function handleSubmit(e) {
     e.preventDefault();
@@ -32,6 +37,24 @@ function Settings() {
     }
   }
 
+  async function handleUpgrade(e) {
+    e.preventDefault();
+    setUpgrading(true);
+    setUpgradeError('');
+    try {
+      await upgradeGuest(upgradeUsername.trim(), upgradePassword);
+    } catch (err) {
+      setUpgradeError(err.response?.data?.error || "Couldn't create your account. Try again.");
+    } finally {
+      setUpgrading(false);
+    }
+  }
+
+  function handleLogout() {
+    logout();
+    navigate('/onboarding', { replace: true });
+  }
+
   return (
     <div className={styles.page}>
       <div>
@@ -40,9 +63,51 @@ function Settings() {
       </div>
 
       <div className={`card ${styles.card}`}>
-        <span className="eyebrow">Name</span>
-        <p className={styles.name}>{user?.name}</p>
+        <span className="eyebrow">{user?.isGuest ? 'Guest name' : 'Username'}</span>
+        <p className={styles.name}>{user?.isGuest ? user?.name : user?.username}</p>
       </div>
+
+      {user?.isGuest && (
+        <form onSubmit={handleUpgrade} className={`card ${styles.form}`}>
+          <span className="eyebrow">Save your data</span>
+          <p className={styles.hint}>
+            You're using a guest session — it only lives on this device. Create a username and
+            password to keep your data and sign in anywhere.
+          </p>
+          <div className="field">
+            <label htmlFor="upgradeUsername">Username</label>
+            <input
+              id="upgradeUsername"
+              type="text"
+              value={upgradeUsername}
+              onChange={(e) => setUpgradeUsername(e.target.value)}
+              placeholder="e.g. jordan_r"
+              autoCapitalize="none"
+              autoCorrect="off"
+              className="input"
+            />
+          </div>
+          <div className="field">
+            <label htmlFor="upgradePassword">Password</label>
+            <input
+              id="upgradePassword"
+              type="password"
+              value={upgradePassword}
+              onChange={(e) => setUpgradePassword(e.target.value)}
+              placeholder="At least 6 characters"
+              className="input"
+            />
+          </div>
+          {upgradeError && <p className={styles.error}>{upgradeError}</p>}
+          <button
+            type="submit"
+            className="btn btn-primary"
+            disabled={upgrading || !upgradeUsername.trim() || !upgradePassword}
+          >
+            {upgrading ? 'Creating…' : 'Create account'}
+          </button>
+        </form>
+      )}
 
       <form onSubmit={handleSubmit} className={`card ${styles.form}`}>
         <div className="field">
@@ -88,6 +153,10 @@ function Settings() {
 
       <button type="button" className="btn btn-secondary" onClick={() => navigate(-1)}>
         Back
+      </button>
+
+      <button type="button" className="btn btn-danger" onClick={handleLogout}>
+        Log out
       </button>
     </div>
   );

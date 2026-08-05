@@ -21,7 +21,7 @@ function Layout() {
     let cancelled = false;
 
     function fetchUnread() {
-      api.get('/notifications', { params: { userId: user._id } })
+      api.get('/notifications')
         .then((res) => {
           if (!cancelled) setUnreadCount(res.data.filter((n) => !n.read).length);
         })

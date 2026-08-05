@@ -1,7 +1,7 @@
 import api from './api.js';
 
-export function listCategories(userId) {
-  return api.get('/categories', { params: { userId } }).then((res) => res.data);
+export function listCategories() {
+  return api.get('/categories').then((res) => res.data);
 }
 
 export function createCategory(payload) {

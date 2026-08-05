@@ -34,7 +34,7 @@ function AddExpense() {
 
   useEffect(() => {
     if (!user) return;
-    listCategories(user._id).then((cats) => {
+    listCategories().then((cats) => {
       setCategories(cats);
       if (cats.length && !categoryId) setCategoryId(cats[0]._id);
     });
@@ -69,7 +69,6 @@ function AddExpense() {
     setCreatingCategory(true);
     try {
       const category = await createCategory({
-        userId: user._id,
         name: newCategoryName.trim(),
         icon: '🏷️',
         color: '#60a5fa',
@@ -101,7 +100,6 @@ function AddExpense() {
       }
 
       await createExpense({
-        userId: user._id,
         amount: parseFloat(amount),
         category: categoryId,
         merchant: merchant.trim(),

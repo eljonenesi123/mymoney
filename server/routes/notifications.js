@@ -1,6 +1,7 @@
 import { Router } from 'express';
 import Notification from '../models/Notification.js';
 import Expense from '../models/Expense.js';
+import { requireAuth } from '../middleware/auth.js';
 
 const router = Router();
 
@@ -62,7 +63,7 @@ async function generateForUser(userId) {
   const isSunday = now.getDay() === 0;
   if (isSunday && thisWeekExpenses.length > 0) {
     const weekTotal = thisWeekExpenses.reduce((sum, e) => sum + e.amount, 0);
-    const message = `Weekly summary: you spent $${weekTotal.toFixed(2)} across ${thisWeekExpenses.length} expenses this week.`;
+    const message = `Weekly summary: you spent ${weekTotal.toFixed(0)} across ${thisWeekExpenses.length} expenses this week.`;
 
     const alreadyExists = await Notification.exists({
       userId,
@@ -78,13 +79,11 @@ async function generateForUser(userId) {
   return created;
 }
 
+router.use(requireAuth);
+
 router.get('/', async (req, res, next) => {
   try {
-    const { userId } = req.query;
-    if (!userId) {
-      return res.status(400).json({ error: 'userId is required' });
-    }
-    const notifications = await Notification.find({ userId }).sort({ createdAt: -1 });
+    const notifications = await Notification.find({ userId: req.userId }).sort({ createdAt: -1 });
     res.json(notifications);
   } catch (err) {
     next(err);
@@ -93,11 +92,7 @@ router.get('/', async (req, res, next) => {
 
 router.post('/generate', async (req, res, next) => {
   try {
-    const { userId } = req.body;
-    if (!userId) {
-      return res.status(400).json({ error: 'userId is required' });
-    }
-    const created = await generateForUser(userId);
+    const created = await generateForUser(req.userId);
     res.status(201).json(created);
   } catch (err) {
     next(err);
@@ -106,8 +101,8 @@ router.post('/generate', async (req, res, next) => {
 
 router.patch('/:id/read', async (req, res, next) => {
   try {
-    const notification = await Notification.findByIdAndUpdate(
-      req.params.id,
+    const notification = await Notification.findOneAndUpdate(
+      { _id: req.params.id, userId: req.userId },
       { read: true },
       { new: true },
     );
