@@ -12,7 +12,21 @@ import uploadsRouter from './routes/uploads.js';
 const app = express();
 const PORT = process.env.PORT || 5000;
 
-app.use(cors({ origin: process.env.CLIENT_URL || 'http://localhost:5173' }));
+const allowedOrigins = [
+  'http://localhost:5173',
+  'http://localhost:4173',
+  ...(process.env.CLIENT_URL ? [process.env.CLIENT_URL] : []),
+];
+
+app.use(cors({
+  origin: (origin, callback) => {
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
+}));
 app.use(express.json());
 app.use('/uploads', express.static('uploads'));
 
