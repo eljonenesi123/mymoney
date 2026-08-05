@@ -14,9 +14,16 @@ function getTransporter() {
   transporter = nodemailer.createTransport({
     service: 'gmail',
     auth: {
-      user: process.env.EMAIL_USER,
-      pass: process.env.EMAIL_PASS,
+      user: process.env.EMAIL_USER.trim(),
+      // Google displays app passwords with spaces for readability; strip
+      // them defensively in case they got copied verbatim.
+      pass: process.env.EMAIL_PASS.replace(/\s+/g, ''),
     },
+    // Fail fast instead of hanging for minutes if the host can't reach
+    // Gmail's SMTP servers at all (e.g. outbound port blocked).
+    connectionTimeout: 15000,
+    greetingTimeout: 15000,
+    socketTimeout: 15000,
   });
   return transporter;
 }

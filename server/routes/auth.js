@@ -68,7 +68,8 @@ async function startVerification(res, { username, email, password, upgradeForUse
 
   try {
     await sendVerificationCode(email, code);
-  } catch {
+  } catch (err) {
+    console.error('sendVerificationCode failed:', err.message);
     return res.status(502).json({ error: "Couldn't send the verification email. Try again shortly." });
   }
 
@@ -158,7 +159,8 @@ router.post('/register/resend', async (req, res, next) => {
 
     try {
       await sendVerificationCode(pending.email, pending.code);
-    } catch {
+    } catch (err) {
+      console.error('sendVerificationCode failed:', err.message);
       return res.status(502).json({ error: "Couldn't send the verification email. Try again shortly." });
     }
 
@@ -303,7 +305,8 @@ router.post('/upgrade/resend', requireAuth, async (req, res, next) => {
 
     try {
       await sendVerificationCode(pending.email, pending.code);
-    } catch {
+    } catch (err) {
+      console.error('sendVerificationCode failed:', err.message);
       return res.status(502).json({ error: "Couldn't send the verification email. Try again shortly." });
     }
 
