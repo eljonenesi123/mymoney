@@ -1,18 +1,27 @@
+import dns from 'node:dns/promises';
 import nodemailer from 'nodemailer';
 
-let transporter;
+function isConfigured() {
+  if (process.env.EMAIL_USER && process.env.EMAIL_PASS) return true;
+  console.warn('EMAIL_USER/EMAIL_PASS not set — verification emails cannot be sent');
+  return false;
+}
 
-function getTransporter() {
-  if (transporter !== undefined) return transporter;
+// Resolves smtp.gmail.com to a literal IPv4 address and connects to that
+// directly, rather than letting nodemailer/Node resolve the hostname
+// itself. Some hosts (Render included) resolve an IPv6 address for the
+// hostname but have no actual outbound IPv6 route, failing with
+// ENETUNREACH — connecting by IP sidesteps that entirely. `tls.servername`
+// keeps the TLS handshake/cert validation targeting the real hostname
+// since we're no longer connecting by name.
+async function createTransporter() {
+  const [ipv4] = await dns.resolve4('smtp.gmail.com');
 
-  if (!process.env.EMAIL_USER || !process.env.EMAIL_PASS) {
-    console.warn('EMAIL_USER/EMAIL_PASS not set — verification emails cannot be sent');
-    transporter = null;
-    return transporter;
-  }
-
-  transporter = nodemailer.createTransport({
-    service: 'gmail',
+  return nodemailer.createTransport({
+    host: ipv4,
+    port: 465,
+    secure: true,
+    tls: { servername: 'smtp.gmail.com' },
     auth: {
       user: process.env.EMAIL_USER.trim(),
       // Google displays app passwords with spaces for readability; strip
@@ -24,12 +33,7 @@ function getTransporter() {
     connectionTimeout: 15000,
     greetingTimeout: 15000,
     socketTimeout: 15000,
-    // Belt-and-suspenders alongside the process-wide dns.setDefaultResultOrder
-    // in index.js — some hosts resolve an IPv6 address for smtp.gmail.com
-    // but have no outbound IPv6 route, failing with ENETUNREACH.
-    family: 4,
   });
-  return transporter;
 }
 
 function verificationEmailHtml(code) {
@@ -62,12 +66,12 @@ function verificationEmailHtml(code) {
 // is confirmed delivered and entered correctly, so the caller needs to
 // know if sending genuinely failed.
 export async function sendVerificationCode(to, code) {
-  const t = getTransporter();
-  if (!t) {
+  if (!isConfigured()) {
     throw new Error('Email sending is not configured on the server');
   }
 
-  await t.sendMail({
+  const transporter = await createTransporter();
+  await transporter.sendMail({
     from: `"MyMoney" <${process.env.EMAIL_USER}>`,
     to,
     subject: `${code} is your MyMoney verification code`,
