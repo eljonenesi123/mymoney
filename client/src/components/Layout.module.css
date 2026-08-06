@@ -132,12 +132,14 @@
   align-items: center;
   gap: 3px;
   text-align: center;
-  padding: 9px 0 7px;
-  font-size: 0.625rem;
+  padding: 9px 1px 7px;
+  font-size: 0.5938rem;
+  letter-spacing: -0.01em;
   font-weight: 600;
   text-decoration: none;
   color: var(--nav-text-muted);
   min-width: 0;
+  white-space: nowrap;
 }
 
 .navIcon {
