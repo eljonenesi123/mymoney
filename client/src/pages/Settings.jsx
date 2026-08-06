@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useUser } from '../context/UserContext.jsx';
 import { useTheme } from '../context/ThemeContext.jsx';
+import { isNotificationSupported, getNotificationPermission, requestNotificationPermission } from '../lib/notifications.js';
 import styles from './Settings.module.css';
 
 const CURRENCIES = [
@@ -18,6 +19,19 @@ function Settings() {
   const [saving, setSaving] = useState(false);
   const [saved, setSaved] = useState(false);
   const [error, setError] = useState('');
+
+  const [notifPermission, setNotifPermission] = useState(getNotificationPermission());
+  const [notifRequesting, setNotifRequesting] = useState(false);
+
+  async function handleEnableNotifications() {
+    setNotifRequesting(true);
+    try {
+      const result = await requestNotificationPermission();
+      setNotifPermission(result);
+    } finally {
+      setNotifRequesting(false);
+    }
+  }
 
   const [upgradeUsername, setUpgradeUsername] = useState('');
   const [upgradePassword, setUpgradePassword] = useState('');
@@ -86,6 +100,36 @@ function Settings() {
           <span className={styles.themeToggleThumb} />
         </button>
       </div>
+
+      {isNotificationSupported() && (
+        <div className={`card ${styles.themeCard}`}>
+          <div>
+            <span className="eyebrow">Bill reminders</span>
+            <p className={styles.themeLabel}>
+              {notifPermission === 'granted'
+                ? 'Notifications enabled'
+                : notifPermission === 'denied'
+                ? 'Blocked in browser settings'
+                : 'Notifications off'}
+            </p>
+            <p className={styles.hint}>
+              {notifPermission === 'granted'
+                ? "You'll see in-app reminders for bills due soon or overdue whenever you open the app."
+                : 'Turn on to allow bill reminders. Notifications only appear while the app is open — reminders while it\'s fully closed need a backend service we haven\'t set up yet.'}
+            </p>
+          </div>
+          {notifPermission !== 'granted' && notifPermission !== 'denied' && (
+            <button
+              type="button"
+              className="btn btn-secondary"
+              onClick={handleEnableNotifications}
+              disabled={notifRequesting}
+            >
+              {notifRequesting ? 'Requesting…' : 'Enable'}
+            </button>
+          )}
+        </div>
+      )}
 
       {user?.isGuest && (
         <form onSubmit={handleUpgrade} className={`card ${styles.form}`}>
@@ -170,6 +214,10 @@ function Settings() {
           {saving ? 'Saving…' : 'Save changes'}
         </button>
       </form>
+
+      <button type="button" className="btn btn-secondary" onClick={() => navigate('/bills')}>
+        📅 Manage bills
+      </button>
 
       <button type="button" className="btn btn-secondary" onClick={() => navigate(-1)}>
         Back

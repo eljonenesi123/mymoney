@@ -1,0 +1,149 @@
+.page {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  padding-top: 8px;
+}
+
+.form,
+.editForm {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.formActions {
+  display: flex;
+  gap: 8px;
+}
+
+.formActions .btn {
+  flex: 1;
+}
+
+.error {
+  color: var(--negative-text);
+  font-size: 0.875rem;
+  margin: 0;
+}
+
+.muted {
+  color: var(--text-muted);
+  text-align: center;
+  padding: 32px 0;
+}
+
+.sectionLabel {
+  display: block;
+  color: var(--text-muted);
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  margin: 4px 0 10px;
+}
+
+.billList {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.billCard {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  border-left: 3px solid var(--border);
+}
+
+/* Overdue bills use the expense/terracotta color; due-within-3-days uses
+   the brand gold — both as a left accent border so the whole list stays
+   scannable at a glance without recoloring the entire card. */
+.overdue {
+  border-left-color: var(--negative-text);
+}
+
+.soon {
+  border-left-color: var(--accent);
+}
+
+.billHead {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.billTitleGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.billName {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 1.0625rem;
+  color: var(--text);
+}
+
+.billMeta {
+  font-size: 0.8125rem;
+  color: var(--text-muted);
+  text-transform: capitalize;
+}
+
+.billAmount {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+  font-weight: 700;
+  color: var(--text);
+  white-space: nowrap;
+}
+
+.billFoot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.urgencyLabel {
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: var(--text-muted);
+}
+
+.overdue .urgencyLabel {
+  color: var(--negative-text);
+}
+
+.soon .urgencyLabel {
+  color: var(--secondary-text);
+}
+
+.paidLabel {
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: var(--positive-text);
+}
+
+.billActions {
+  display: flex;
+  gap: 4px;
+}
+
+.iconButton {
+  background: none;
+  border: none;
+  color: var(--text-faint);
+  cursor: pointer;
+  font-size: 0.875rem;
+  padding: 4px 6px;
+  line-height: 1;
+}
+
+.iconButton:hover {
+  color: var(--text);
+}

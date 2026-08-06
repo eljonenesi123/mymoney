@@ -70,3 +70,28 @@ self.addEventListener('fetch', (event) => {
     }),
   );
 });
+
+// Groundwork for bill-due push notifications. This only fires if something
+// sends a real Web Push message to this service worker's subscription — and
+// nothing does yet, because that requires a backend (or serverless
+// function) holding the subscription and triggering pushes at the right
+// time (e.g. a daily cron checking bills due soon). Without that backend
+// piece, this handler exists but is never invoked; wiring it up is future
+// work, not something the client alone can do reliably.
+self.addEventListener('push', (event) => {
+  const data = event.data ? event.data.json() : {};
+  const title = data.title || 'Bill reminder';
+  const options = {
+    body: data.body || 'You have a bill due soon.',
+    icon: `${BASE}icon-192.png`,
+    badge: `${BASE}icon-192.png`,
+    data: { url: data.url || BASE },
+  };
+  event.waitUntil(self.registration.showNotification(title, options));
+});
+
+self.addEventListener('notificationclick', (event) => {
+  event.notification.close();
+  const url = event.notification.data?.url || BASE;
+  event.waitUntil(self.clients.openWindow(url));
+});

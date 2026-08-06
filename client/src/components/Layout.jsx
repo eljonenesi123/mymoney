@@ -10,6 +10,7 @@ const NAV_ITEMS = [
   { to: '/add', label: 'Add', icon: '➕', end: false },
   { to: '/history', label: 'History', icon: '📜', end: false },
   { to: '/goals', label: 'Goals', icon: '🐷', end: false },
+  { to: '/bills', label: 'Bills', icon: '📅', end: false },
   { to: '/insights', label: 'Insights', icon: '📊', end: false },
 ];
 

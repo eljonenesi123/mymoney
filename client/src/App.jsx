@@ -11,6 +11,7 @@ import AddExpense from './pages/AddExpense.jsx';
 import ExpenseHistory from './pages/ExpenseHistory.jsx';
 import Insights from './pages/Insights.jsx';
 import Goals from './pages/Goals.jsx';
+import Bills from './pages/Bills.jsx';
 import Notifications from './pages/Notifications.jsx';
 import Settings from './pages/Settings.jsx';
 
@@ -44,6 +45,7 @@ function App() {
               <Route path="/history" element={<ExpenseHistory />} />
               <Route path="/insights" element={<Insights />} />
               <Route path="/goals" element={<Goals />} />
+              <Route path="/bills" element={<Bills />} />
               <Route path="/notifications" element={<Notifications />} />
               <Route path="/settings" element={<Settings />} />
             </Route>

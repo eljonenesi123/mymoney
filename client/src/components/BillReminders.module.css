@@ -1,0 +1,58 @@
+.wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.reminder {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  border-left: 3px solid var(--border);
+  padding: 14px 16px;
+}
+
+.overdue {
+  border-left-color: var(--negative-text);
+  background: var(--negative-soft);
+}
+
+.soon {
+  border-left-color: var(--accent);
+  background: var(--accent-soft);
+}
+
+.icon {
+  font-size: 1.25rem;
+  flex-shrink: 0;
+}
+
+.text {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+  flex: 1;
+}
+
+.title {
+  font-weight: 700;
+  font-size: 0.9375rem;
+  color: var(--text);
+}
+
+.sub {
+  font-size: 0.8125rem;
+  color: var(--text-muted);
+}
+
+.link {
+  color: inherit;
+  text-decoration: underline;
+}
+
+.reminder .btn {
+  flex-shrink: 0;
+  padding: 8px 14px;
+  font-size: 0.8125rem;
+}

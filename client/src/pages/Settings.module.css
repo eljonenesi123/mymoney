@@ -47,6 +47,11 @@
   flex-direction: row;
   align-items: center;
   justify-content: space-between;
+  gap: 12px;
+}
+
+.themeCard .btn {
+  flex-shrink: 0;
 }
 
 .themeLabel {

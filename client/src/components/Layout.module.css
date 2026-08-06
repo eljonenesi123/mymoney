@@ -1,22 +1,35 @@
-/* App shell: an exact-height flex column with header/nav pinned as
-   flex-shrink:0 items and only .main scrolling internally. This is
-   deliberately NOT position: sticky/fixed for the header/nav — sticky
-   positioning only "sticks" relative to how much the page has scrolled,
-   and on short-content pages (e.g. an empty state) there's nothing to
-   scroll, which is what let the nav appear to drift or stop partway up.
-   Pinning them via flex layout instead means their position never
-   depends on content length or scroll state at all. */
+/* App shell: pinned directly to the viewport with position:fixed, not
+   sized via document flow. The earlier attempt (a flex column relying on
+   height:100dvh inside normal document flow) still let the whole thing
+   drift on real devices: if the *document* (body/html) ends up taller
+   than the visible viewport for even a moment — dvh recalculating as the
+   address bar hides/shows, a rounding mismatch between dvh and the actual
+   visual viewport, etc — the page scrolls, and everything inside .shell
+   (including the header) scrolls with it, which is exactly "header slides
+   under the status bar" / "nav stuck mid-screen". Fixed positioning is
+   anchored to the viewport itself, so it's immune to that: no matter what
+   the document does, the shell — and therefore the header/nav inside it —
+   never moves. Header/nav are flex-shrink:0 items inside it; only .main
+   scrolls, via its own overflow-y:auto. */
 .shell {
-  display: flex;
-  flex-direction: column;
+  position: fixed;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100%;
   /* svh fallback for browsers without dvh support (Safari <15.4 etc).
      dvh (dynamic viewport height) tracks the actual visible area as
      mobile browser chrome collapses/expands; plain vh doesn't, which is
      the other half of what caused the nav to visually jump. */
   height: 100svh;
   height: 100dvh;
+  max-width: var(--phone-width);
+  display: flex;
+  flex-direction: column;
   background: var(--bg);
   overflow: hidden;
+  border-left: 1px solid var(--border);
+  border-right: 1px solid var(--border);
 }
 
 /* Header and bottom nav are the app's "dark UI" elements — a navy bar
@@ -117,17 +130,18 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 4px;
+  gap: 3px;
   text-align: center;
-  padding: 10px 0 8px;
-  font-size: 0.6875rem;
+  padding: 9px 0 7px;
+  font-size: 0.625rem;
   font-weight: 600;
   text-decoration: none;
   color: var(--nav-text-muted);
+  min-width: 0;
 }
 
 .navIcon {
-  font-size: 1.15rem;
+  font-size: 1.0625rem;
   line-height: 1;
 }
 
