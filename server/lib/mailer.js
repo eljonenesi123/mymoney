@@ -24,6 +24,10 @@ function getTransporter() {
     connectionTimeout: 15000,
     greetingTimeout: 15000,
     socketTimeout: 15000,
+    // Belt-and-suspenders alongside the process-wide dns.setDefaultResultOrder
+    // in index.js — some hosts resolve an IPv6 address for smtp.gmail.com
+    // but have no outbound IPv6 route, failing with ENETUNREACH.
+    family: 4,
   });
   return transporter;
 }

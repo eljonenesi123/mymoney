@@ -1,4 +1,5 @@
 import 'dotenv/config';
+import dns from 'node:dns';
 import express from 'express';
 import cors from 'cors';
 import { connectDB } from './config/db.js';
@@ -9,6 +10,12 @@ import expensesRouter from './routes/expenses.js';
 import categoriesRouter from './routes/categories.js';
 import { ensureDefaultCategories } from './seed/categories.js';
 import uploadsRouter from './routes/uploads.js';
+
+// Some hosts (Render included) advertise IPv6 support but have no actual
+// outbound route, so IPv6-first DNS resolution fails outbound connections
+// (e.g. Gmail SMTP) with ENETUNREACH even though IPv4 works fine. Prefer
+// IPv4 process-wide.
+dns.setDefaultResultOrder('ipv4first');
 
 const app = express();
 const PORT = process.env.PORT || 5000;
