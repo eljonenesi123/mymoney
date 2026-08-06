@@ -42,7 +42,7 @@ function Dashboard() {
     const map = new Map();
     for (const e of expenses) {
       const key = e.category?._id || 'other';
-      const existing = map.get(key) || { name: e.category?.name || 'Other', value: 0, color: e.category?.color || '#5c584c' };
+      const existing = map.get(key) || { name: e.category?.name || 'Other', value: 0, color: e.category?.color || '#8B8378' };
       existing.value += e.amount;
       map.set(key, existing);
     }
@@ -128,7 +128,7 @@ function Dashboard() {
               <li key={e._id} className={styles.recentRow}>
                 <span
                   className={`icon-badge ${styles.recentIcon}`}
-                  style={{ background: `color-mix(in srgb, ${e.category?.color || '#9ca3af'} 22%, transparent)` }}
+                  style={{ background: `color-mix(in srgb, ${e.category?.color || '#8B8378'} 22%, transparent)` }}
                 >
                   {e.category?.icon || '🏷️'}
                 </span>

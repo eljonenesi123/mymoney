@@ -6,7 +6,7 @@
 }
 
 html {
-  color-scheme: dark;
+  color-scheme: light;
 }
 
 body {
@@ -46,7 +46,10 @@ h3 { font-size: 1.0625rem; }
 
 p { margin: 0; }
 
-a { color: var(--accent); }
+/* --accent (gold) only reaches ~2:1 against this light background — not
+   safe for link text (needs 4.5:1), so links use the deepened secondary
+   shade meant for on-light text instead. */
+a { color: var(--secondary-text); }
 
 button {
   font: inherit;

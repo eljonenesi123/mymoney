@@ -1,4 +1,4 @@
-/* Shared component primitives — dark finance-app system */
+/* Shared component primitives — muted warm light system */
 
 .card {
   background: var(--card);
@@ -31,11 +31,11 @@
 }
 
 .amount[data-positive='true'] {
-  color: var(--accent);
+  color: var(--positive-text);
 }
 
 .amount[data-negative='true'] {
-  color: var(--negative);
+  color: var(--negative-text);
 }
 
 .btn {
@@ -57,22 +57,25 @@
   transform: translateY(1px);
 }
 
+/* Focus rings use --text rather than --accent: the gold accent only
+   reaches ~2:1 against the light background, well under the 3:1 WCAG
+   non-text contrast minimum a focus indicator needs to stay visible. */
 .btn:focus-visible {
-  outline: 2px solid var(--accent);
+  outline: 2px solid var(--text);
   outline-offset: 2px;
 }
 
 .btn-primary {
   background: var(--accent);
-  color: #05130d;
+  color: var(--text);
 }
 
 .btn-primary:hover {
-  box-shadow: 0 4px 16px rgba(52, 211, 153, 0.3);
+  box-shadow: 0 4px 16px rgba(212, 168, 87, 0.4);
 }
 
 .btn-primary:disabled {
-  opacity: 0.4;
+  opacity: 0.45;
   cursor: not-allowed;
   box-shadow: none;
 }
@@ -80,16 +83,16 @@
 .btn-secondary {
   background: var(--card-raised);
   color: var(--text);
-  border-color: var(--border);
+  border-color: var(--secondary);
 }
 
 .btn-secondary:hover {
-  background: var(--border);
+  background: var(--secondary-soft);
 }
 
 .btn-danger {
   background: transparent;
-  color: var(--negative);
+  color: var(--negative-text);
   border-color: var(--negative-soft);
 }
 
@@ -130,7 +133,7 @@
 .input:focus,
 .select:focus,
 .textarea:focus {
-  outline: 2px solid var(--accent);
+  outline: 2px solid var(--text);
   outline-offset: -1px;
 }
 
@@ -151,7 +154,7 @@
 
 .chip[data-active='true'] {
   background: var(--accent-soft);
-  color: var(--accent);
+  color: var(--text);
   border-color: var(--accent);
 }
 

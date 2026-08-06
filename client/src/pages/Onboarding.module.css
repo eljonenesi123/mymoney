@@ -7,7 +7,7 @@
 }
 
 .mark {
-  color: var(--accent);
+  color: var(--secondary-text);
   margin-bottom: 12px;
 }
 
@@ -30,7 +30,7 @@
 }
 
 .error {
-  color: var(--negative);
+  color: var(--negative-text);
   font-size: 0.875rem;
   margin: 0;
 }

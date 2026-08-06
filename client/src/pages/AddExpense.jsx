@@ -71,7 +71,7 @@ function AddExpense() {
       const category = await createCategory({
         name: newCategoryName.trim(),
         icon: '🏷️',
-        color: '#60a5fa',
+        color: '#6E8CA0',
       });
       setCategories((prev) => [...prev, category]);
       setCategoryId(category._id);

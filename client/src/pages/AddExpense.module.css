@@ -13,7 +13,7 @@
 
 .scanNotice {
   font-size: 0.8125rem;
-  color: var(--accent);
+  color: var(--text);
   background: var(--accent-soft);
   padding: 10px 12px;
   border-radius: var(--radius-sm);
@@ -21,7 +21,7 @@
 }
 
 .error {
-  color: var(--negative);
+  color: var(--negative-text);
   font-size: 0.875rem;
   margin: 0;
 }
@@ -30,7 +30,7 @@
   align-self: flex-start;
   background: none;
   border: none;
-  color: var(--accent);
+  color: var(--secondary-text);
   font-size: 0.8125rem;
   font-weight: 600;
   cursor: pointer;

@@ -1,4 +1,4 @@
-const CACHE_VERSION = 'mymoney-v3';
+const CACHE_VERSION = 'mymoney-v4';
 
 // Deployed at the site root locally, but under /mymoney/ on GitHub Pages —
 // derive the app's base path from this script's own URL so caching works

@@ -1,14 +1,14 @@
 import Category from '../models/Category.js';
 
 const DEFAULT_CATEGORIES = [
-  { name: 'Food & Dining', icon: '🍔', color: '#fb923c' },
-  { name: 'Groceries', icon: '🛒', color: '#34d399' },
-  { name: 'Transport', icon: '🚗', color: '#60a5fa' },
-  { name: 'Shopping', icon: '🛍️', color: '#f472b6' },
-  { name: 'Bills & Utilities', icon: '🧾', color: '#fbbf24' },
-  { name: 'Entertainment', icon: '🎬', color: '#a78bfa' },
-  { name: 'Health', icon: '💊', color: '#f87171' },
-  { name: 'Other', icon: '🏷️', color: '#9ca3af' },
+  { name: 'Food & Dining', icon: '🍔', color: '#C98A52' },
+  { name: 'Groceries', icon: '🛒', color: '#7FA37F' },
+  { name: 'Transport', icon: '🚗', color: '#6E8CA0' },
+  { name: 'Shopping', icon: '🛍️', color: '#C98FA0' },
+  { name: 'Bills & Utilities', icon: '🧾', color: '#C9A857' },
+  { name: 'Entertainment', icon: '🎬', color: '#8B7398' },
+  { name: 'Health', icon: '💊', color: '#B5654B' },
+  { name: 'Other', icon: '🏷️', color: '#8B8378' },
 ];
 
 export async function ensureDefaultCategories() {

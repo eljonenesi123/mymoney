@@ -5,6 +5,8 @@
   background: var(--bg);
 }
 
+/* Header and bottom nav are the app's "dark UI" elements — a navy bar
+   anchoring navigation against the light content area. */
 .header {
   display: flex;
   align-items: center;
@@ -12,7 +14,7 @@
   padding: 20px 20px 16px;
   position: sticky;
   top: 0;
-  background: var(--bg);
+  background: var(--nav-bg);
   z-index: 10;
 }
 
@@ -30,6 +32,7 @@
   font-weight: 800;
   font-size: 1.125rem;
   letter-spacing: -0.01em;
+  color: var(--nav-text);
 }
 
 .brandMark {
@@ -42,8 +45,8 @@
 
 .bellButton {
   position: relative;
-  background: var(--card);
-  border: 1px solid var(--border);
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.16);
   width: 40px;
   height: 40px;
   border-radius: 999px;
@@ -52,7 +55,7 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  color: var(--text);
+  color: var(--nav-text);
 }
 
 .bellButton:focus-visible {
@@ -64,7 +67,7 @@
   position: absolute;
   top: -4px;
   right: -4px;
-  background: var(--negative);
+  background: var(--negative-text);
   color: #fff;
   font-family: var(--font-mono);
   font-size: 0.625rem;
@@ -72,7 +75,7 @@
   line-height: 1;
   padding: 3px 5px;
   border-radius: 999px;
-  border: 2px solid var(--bg);
+  border: 2px solid var(--nav-bg);
 }
 
 .main {
@@ -82,10 +85,10 @@
 
 .nav {
   display: flex;
-  border-top: 1px solid var(--border);
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
   position: sticky;
   bottom: 0;
-  background: rgba(11, 11, 15, 0.92);
+  background: rgba(44, 62, 76, 0.94);
   backdrop-filter: blur(12px);
   padding-bottom: env(safe-area-inset-bottom);
 }
@@ -102,7 +105,7 @@
   font-size: 0.6875rem;
   font-weight: 600;
   text-decoration: none;
-  color: var(--text-faint);
+  color: var(--nav-text-muted);
 }
 
 .navIcon {

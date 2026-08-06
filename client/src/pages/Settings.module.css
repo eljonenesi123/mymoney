@@ -25,13 +25,13 @@
 }
 
 .error {
-  color: var(--negative);
+  color: var(--negative-text);
   font-size: 0.875rem;
   margin: 0;
 }
 
 .saved {
-  color: var(--accent);
+  color: var(--positive-text);
   font-size: 0.875rem;
   margin: 0;
 }

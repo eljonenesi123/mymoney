@@ -35,11 +35,11 @@
 }
 
 .result[data-afford='true'] {
-  background: var(--accent-soft);
-  color: var(--accent);
+  background: var(--positive-soft);
+  color: var(--positive-text);
 }
 
 .result[data-afford='false'] {
   background: var(--negative-soft);
-  color: var(--negative);
+  color: var(--negative-text);
 }

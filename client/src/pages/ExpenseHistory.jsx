@@ -105,7 +105,7 @@ function ExpenseHistory() {
               <div className={styles.rowMain}>
                 <span
                   className={`icon-badge ${styles.categoryDot}`}
-                  style={{ background: `color-mix(in srgb, ${expense.category?.color || '#9ca3af'} 22%, transparent)` }}
+                  style={{ background: `color-mix(in srgb, ${expense.category?.color || '#8B8378'} 22%, transparent)` }}
                 >
                   {expense.category?.icon || '🏷️'}
                 </span>

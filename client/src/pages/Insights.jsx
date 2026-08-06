@@ -40,7 +40,7 @@ function Insights() {
     const map = new Map();
     for (const e of expenses) {
       const key = e.category?.name || 'Other';
-      const existing = map.get(key) || { name: key, value: 0, color: e.category?.color || '#5c584c' };
+      const existing = map.get(key) || { name: key, value: 0, color: e.category?.color || '#8B8378' };
       existing.value += e.amount;
       map.set(key, existing);
     }
@@ -104,27 +104,27 @@ function Insights() {
                 <AreaChart data={trend} margin={{ top: 8, right: 0, left: 0, bottom: 0 }}>
                   <defs>
                     <linearGradient id="trendFill" x1="0" y1="0" x2="0" y2="1">
-                      <stop offset="0%" stopColor="#34d399" stopOpacity={0.3} />
-                      <stop offset="100%" stopColor="#34d399" stopOpacity={0} />
+                      <stop offset="0%" stopColor="#D4A857" stopOpacity={0.35} />
+                      <stop offset="100%" stopColor="#D4A857" stopOpacity={0} />
                     </linearGradient>
                   </defs>
-                  <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.08)" vertical={false} />
+                  <CartesianGrid strokeDasharray="3 3" stroke="rgba(44,62,76,0.1)" vertical={false} />
                   <XAxis
                     dataKey="label"
                     tickLine={false}
                     axisLine={false}
-                    tick={{ fontSize: 11, fill: '#9ca3af' }}
+                    tick={{ fontSize: 11, fill: '#858E92' }}
                   />
                   <YAxis hide domain={[0, 'dataMax']} />
-                  <Tooltip content={<CustomTooltip currency={currency} />} cursor={{ stroke: 'rgba(255,255,255,0.15)', strokeWidth: 1 }} />
+                  <Tooltip content={<CustomTooltip currency={currency} />} cursor={{ stroke: 'rgba(44,62,76,0.18)', strokeWidth: 1 }} />
                   <Area
                     type="monotone"
                     dataKey="total"
-                    stroke="#34d399"
+                    stroke="#D4A857"
                     strokeWidth={2.5}
                     fill="url(#trendFill)"
                     dot={false}
-                    activeDot={{ r: 4, fill: '#34d399', stroke: '#0b0b0f', strokeWidth: 2 }}
+                    activeDot={{ r: 4, fill: '#D4A857', stroke: '#FCFAF5', strokeWidth: 2 }}
                   />
                 </AreaChart>
               </ResponsiveContainer>

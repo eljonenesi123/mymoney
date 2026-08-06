@@ -109,7 +109,7 @@
   font-size: 0.8125rem;
   font-weight: 600;
   text-decoration: none;
-  color: var(--accent);
+  color: var(--secondary-text);
 }
 
 .muted {

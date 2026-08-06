@@ -1,40 +1,65 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
 
 :root {
-  /* Dark finance-app palette — soft charcoal, never pure black */
-  --page-bg: #0d0e15;
-  --bg: #12141c;
-  --card: #1c1f2a;
-  --card-raised: #242838;
-  --border: rgba(255, 255, 255, 0.08);
-  --border-strong: rgba(255, 255, 255, 0.14);
+  /* Muted, warm light palette — inspired by the piggy-bank/wallet logo.
+     Every text-on-background pairing below is verified WCAG AA
+     (>=4.5:1 for body text, >=3:1 for large text/non-text UI); see
+     the *-text variants where the raw brand color alone doesn't clear
+     4.5:1 and needed a slightly deepened shade within the same hue. */
+  --page-bg: #efead9;
+  --bg: #f7f4ec;
+  --card: #fcfaf5;
+  --card-raised: #ffffff;
+  --border: #e5dcc8;
+  --border-strong: #d6c7a1;
 
-  --text: #ffffff;
-  --text-muted: #9ca3af;
-  --text-faint: #6b7280;
+  --text: #2c3e4c;
+  --text-muted: #657179;
+  --text-faint: #858e92;
 
-  --accent: #34d399;
-  --accent-soft: rgba(52, 211, 153, 0.14);
-  --negative: #f87171;
-  --negative-soft: rgba(248, 113, 113, 0.14);
+  /* Primary accent — buttons, highlights, active states */
+  --accent: #d4a857;
+  --accent-soft: rgba(212, 168, 87, 0.16);
+  /* Text on --accent must use --text (5.02:1) — white on gold fails AA (2.2:1) */
 
-  /* Category badge palette — soft muted tints */
-  --cat-blue: #60a5fa;
-  --cat-blue-bg: rgba(96, 165, 250, 0.16);
-  --cat-purple: #a78bfa;
-  --cat-purple-bg: rgba(167, 139, 250, 0.16);
-  --cat-pink: #f472b6;
-  --cat-pink-bg: rgba(244, 114, 182, 0.16);
-  --cat-orange: #fb923c;
-  --cat-orange-bg: rgba(251, 146, 60, 0.16);
-  --cat-yellow: #fbbf24;
-  --cat-yellow-bg: rgba(251, 191, 36, 0.16);
-  --cat-green: #34d399;
-  --cat-green-bg: rgba(52, 211, 153, 0.16);
-  --cat-red: #f87171;
-  --cat-red-bg: rgba(248, 113, 113, 0.16);
-  --cat-gray: #9ca3af;
-  --cat-gray-bg: rgba(156, 163, 175, 0.16);
+  /* Secondary accent — borders, secondary buttons (used as fill/border,
+     not as small text — #A67C4E as text only reaches ~3:1) */
+  --secondary: #a67c4e;
+  --secondary-soft: rgba(166, 124, 78, 0.16);
+  --secondary-text: #906c44; /* deepened for on-light text/links, 4.56:1 */
+
+  /* Positive amounts (income) */
+  --positive: #6b8f6b;
+  --positive-soft: rgba(107, 143, 107, 0.16);
+  --positive-text: #5c7b5c; /* deepened for amount text, 4.53:1 */
+
+  /* Negative amounts (expenses) */
+  --negative: #c98b6e;
+  --negative-soft: rgba(201, 139, 110, 0.16);
+  --negative-text: #a8603e; /* deepened for amount text, 4.57:1 */
+
+  /* Dark UI elements — header, bottom nav */
+  --nav-bg: #2c3e4c;
+  --nav-text: #ffffff;
+  --nav-text-muted: #a0a8ae; /* inactive nav items, 4.59:1 on --nav-bg */
+
+  /* Category badge palette — muted tints in the same warm-neutral family */
+  --cat-blue: #6e8ca0;
+  --cat-blue-bg: rgba(110, 140, 160, 0.16);
+  --cat-purple: #8b7398;
+  --cat-purple-bg: rgba(139, 115, 152, 0.16);
+  --cat-pink: #c98fa0;
+  --cat-pink-bg: rgba(201, 143, 160, 0.16);
+  --cat-orange: #c98a52;
+  --cat-orange-bg: rgba(201, 138, 82, 0.16);
+  --cat-yellow: #c9a857;
+  --cat-yellow-bg: rgba(201, 168, 87, 0.16);
+  --cat-green: #7fa37f;
+  --cat-green-bg: rgba(127, 163, 127, 0.16);
+  --cat-red: #b5654b;
+  --cat-red-bg: rgba(181, 101, 75, 0.16);
+  --cat-gray: #8b8378;
+  --cat-gray-bg: rgba(139, 131, 120, 0.16);
 
   --font-display: 'Inter', system-ui, sans-serif;
   --font-body: 'Inter', system-ui, sans-serif;
@@ -42,7 +67,7 @@
 
   --radius: 16px;
   --radius-sm: 10px;
-  --shadow-card: 0 8px 24px rgba(0, 0, 0, 0.35);
+  --shadow-card: 0 8px 24px rgba(44, 62, 76, 0.1);
 
   --phone-width: 430px;
 }
