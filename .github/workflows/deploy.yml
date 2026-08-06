@@ -9,16 +9,14 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: read
-  pages: write
-  id-token: write
+  contents: write
 
 concurrency:
   group: pages
   cancel-in-progress: true
 
 jobs:
-  build:
+  build-and-deploy:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -39,16 +37,13 @@ jobs:
         env:
           VITE_API_URL: ${{ secrets.VITE_API_URL }}
 
-      - uses: actions/upload-pages-artifact@v3
+      # Pushes client/dist straight to the gh-pages branch instead of going
+      # through the official Pages Deployment API (actions/deploy-pages) —
+      # that API got stuck in "deployment_queued" indefinitely on this repo
+      # (confirmed via three separate failed/timed-out runs and a Pages
+      # source reset that didn't help). This bypasses it entirely.
+      - name: Deploy to gh-pages branch
+        uses: peaceiris/actions-gh-pages@v4
         with:
-          path: client/dist
-
-  deploy:
-    needs: build
-    runs-on: ubuntu-latest
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-    steps:
-      - id: deployment
-        uses: actions/deploy-pages@v4
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: client/dist
