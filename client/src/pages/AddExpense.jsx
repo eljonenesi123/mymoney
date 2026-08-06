@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useUser } from '../context/UserContext.jsx';
 import { listCategories, createCategory } from '../lib/categories.js';
@@ -10,6 +10,26 @@ import styles from './AddExpense.module.css';
 
 function todayInputValue() {
   return new Date().toISOString().slice(0, 10);
+}
+
+function draftKey(userId) {
+  return `expense-tracker:draft:${userId}`;
+}
+
+// Note: the receipt image (a File object) can't be serialized to
+// localStorage, so a scanned photo won't survive an unexpected close —
+// everything else the user typed will.
+function readDraft(userId) {
+  try {
+    const raw = localStorage.getItem(draftKey(userId));
+    return raw ? JSON.parse(raw) : null;
+  } catch {
+    return null;
+  }
+}
+
+function isDraftWorthSaving(draft) {
+  return Boolean(draft.amount || draft.merchant.trim() || draft.note.trim());
 }
 
 function AddExpense() {
@@ -26,11 +46,16 @@ function AddExpense() {
   const [note, setNote] = useState('');
   const [receiptFile, setReceiptFile] = useState(null);
   const [scanNotice, setScanNotice] = useState('');
+  const [draftNotice, setDraftNotice] = useState('');
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState('');
   const [showNewCategory, setShowNewCategory] = useState(false);
   const [newCategoryName, setNewCategoryName] = useState('');
   const [creatingCategory, setCreatingCategory] = useState(false);
+
+  const restoredRef = useRef(false);
+  const draftStateRef = useRef({ amount: '', merchant: '', categoryId: '', date: '', note: '' });
+  draftStateRef.current = { amount, merchant, categoryId, date, note };
 
   useEffect(() => {
     if (!user) return;
@@ -40,6 +65,51 @@ function AddExpense() {
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user]);
+
+  // Restore an in-progress entry if the app was closed before it got saved.
+  useEffect(() => {
+    if (!user || restoredRef.current) return;
+    restoredRef.current = true;
+    const draft = readDraft(user._id);
+    if (draft && isDraftWorthSaving(draft)) {
+      setAmount(draft.amount || '');
+      setMerchant(draft.merchant || '');
+      if (draft.categoryId) setCategoryId(draft.categoryId);
+      if (draft.date) setDate(draft.date);
+      setNote(draft.note || '');
+      setDraftNotice("Restored what you'd started entering last time.");
+    }
+  }, [user]);
+
+  // Debounced autosave, plus an immediate flush when the app is backgrounded
+  // or closed — covers the case where the debounce timer hasn't fired yet
+  // but the OS is about to suspend/kill the page.
+  useEffect(() => {
+    if (!user) return;
+
+    function flush() {
+      const draft = draftStateRef.current;
+      if (isDraftWorthSaving(draft)) {
+        localStorage.setItem(draftKey(user._id), JSON.stringify(draft));
+      } else {
+        localStorage.removeItem(draftKey(user._id));
+      }
+    }
+
+    const timer = setTimeout(flush, 600);
+
+    function handleVisibilityChange() {
+      if (document.hidden) flush();
+    }
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+    window.addEventListener('pagehide', flush);
+
+    return () => {
+      clearTimeout(timer);
+      document.removeEventListener('visibilitychange', handleVisibilityChange);
+      window.removeEventListener('pagehide', flush);
+    };
+  }, [user, amount, merchant, categoryId, date, note]);
 
   function handleScanned({ amount: scannedAmount, merchant: scannedMerchant, item: scannedItem, file }) {
     setReceiptFile(file);
@@ -108,6 +178,7 @@ function AddExpense() {
         receiptImageUrl,
       });
 
+      if (user) localStorage.removeItem(draftKey(user._id));
       navigate('/history');
     } catch {
       setError("Couldn't save this expense. Try again.");
@@ -124,6 +195,7 @@ function AddExpense() {
 
       <ReceiptScanner onScanned={handleScanned} autoOpen={autoOpenScan} />
       {scanNotice && <p className={styles.scanNotice}>{scanNotice}</p>}
+      {!scanNotice && draftNotice && <p className={styles.scanNotice}>{draftNotice}</p>}
 
       <form onSubmit={handleSubmit} className={styles.form}>
         <div className="field">

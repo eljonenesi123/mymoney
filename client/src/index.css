@@ -9,6 +9,10 @@ html {
   color-scheme: light;
 }
 
+html[data-theme='dark'] {
+  color-scheme: dark;
+}
+
 body {
   margin: 0;
   background: var(--page-bg);

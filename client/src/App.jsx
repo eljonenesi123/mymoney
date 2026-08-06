@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { UserProvider } from './context/UserContext.jsx';
+import { ThemeProvider } from './context/ThemeContext.jsx';
 import RequireUser from './components/RequireUser.jsx';
 import Layout from './components/Layout.jsx';
 import SplashScreen from './components/SplashScreen.jsx';
@@ -9,6 +10,7 @@ import Dashboard from './pages/Dashboard.jsx';
 import AddExpense from './pages/AddExpense.jsx';
 import ExpenseHistory from './pages/ExpenseHistory.jsx';
 import Insights from './pages/Insights.jsx';
+import Goals from './pages/Goals.jsx';
 import Notifications from './pages/Notifications.jsx';
 import Settings from './pages/Settings.jsx';
 
@@ -25,28 +27,31 @@ function App() {
   }, []);
 
   return (
-    <UserProvider>
-      <BrowserRouter basename={import.meta.env.BASE_URL}>
-        <Routes>
-          <Route path="/onboarding" element={<Onboarding />} />
-          <Route
-            element={
-              <RequireUser>
-                <Layout />
-              </RequireUser>
-            }
-          >
-            <Route path="/" element={<Dashboard />} />
-            <Route path="/add" element={<AddExpense />} />
-            <Route path="/history" element={<ExpenseHistory />} />
-            <Route path="/insights" element={<Insights />} />
-            <Route path="/notifications" element={<Notifications />} />
-            <Route path="/settings" element={<Settings />} />
-          </Route>
-        </Routes>
-      </BrowserRouter>
-      {splashPhase !== 'done' && <SplashScreen fadingOut={splashPhase === 'fading'} />}
-    </UserProvider>
+    <ThemeProvider>
+      <UserProvider>
+        <BrowserRouter basename={import.meta.env.BASE_URL}>
+          <Routes>
+            <Route path="/onboarding" element={<Onboarding />} />
+            <Route
+              element={
+                <RequireUser>
+                  <Layout />
+                </RequireUser>
+              }
+            >
+              <Route path="/" element={<Dashboard />} />
+              <Route path="/add" element={<AddExpense />} />
+              <Route path="/history" element={<ExpenseHistory />} />
+              <Route path="/insights" element={<Insights />} />
+              <Route path="/goals" element={<Goals />} />
+              <Route path="/notifications" element={<Notifications />} />
+              <Route path="/settings" element={<Settings />} />
+            </Route>
+          </Routes>
+        </BrowserRouter>
+        {splashPhase !== 'done' && <SplashScreen fadingOut={splashPhase === 'fading'} />}
+      </UserProvider>
+    </ThemeProvider>
   );
 }
 

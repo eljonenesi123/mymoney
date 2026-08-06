@@ -9,6 +9,7 @@ import expensesRouter from './routes/expenses.js';
 import categoriesRouter from './routes/categories.js';
 import { ensureDefaultCategories } from './seed/categories.js';
 import uploadsRouter from './routes/uploads.js';
+import goalsRouter from './routes/goals.js';
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -41,6 +42,7 @@ app.use('/api/notifications', notificationsRouter);
 app.use('/api/expenses', expensesRouter);
 app.use('/api/categories', categoriesRouter);
 app.use('/api/uploads', uploadsRouter);
+app.use('/api/goals', goalsRouter);
 
 app.use((err, req, res, next) => {
   console.error(err);

@@ -4,6 +4,11 @@ const TOKEN_KEY = 'expense-tracker:token';
 
 const api = axios.create({
   baseURL: import.meta.env.VITE_API_URL || 'http://localhost:5000/api',
+  // Without a cap, a stuck mobile connection can hang indefinitely. This is
+  // generous enough to survive a cold Render backend waking up on a single
+  // request, while still failing fast enough for UserContext's retry loop
+  // to kick in instead of the UI looking frozen.
+  timeout: 20000,
 });
 
 api.interceptors.request.use((config) => {

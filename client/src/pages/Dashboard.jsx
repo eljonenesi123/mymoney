@@ -5,6 +5,7 @@ import { useUser } from '../context/UserContext.jsx';
 import { listExpenses } from '../lib/expenses.js';
 import { formatCurrency, formatDate } from '../lib/format.js';
 import AffordabilityCheck from '../components/AffordabilityCheck.jsx';
+import SpendingSummary from '../components/SpendingSummary.jsx';
 import styles from './Dashboard.module.css';
 
 function startOfMonth() {
@@ -61,6 +62,8 @@ function Dashboard() {
       <Link to="/add?scan=1" className={`btn btn-primary ${styles.scanButton}`}>
         📷 Scan a receipt
       </Link>
+
+      <SpendingSummary currency={currency} />
 
       <div className={`card ${styles.totalCard}`}>
         <span className="eyebrow">Total spent</span>

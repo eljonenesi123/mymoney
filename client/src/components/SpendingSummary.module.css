@@ -1,0 +1,45 @@
+.card {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.row {
+  display: flex;
+  align-items: flex-start;
+}
+
+.col {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+}
+
+.divider {
+  width: 1px;
+  align-self: stretch;
+  background: var(--border);
+  margin: 2px 16px;
+}
+
+.period {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--text-muted);
+}
+
+.total {
+  font-size: 1.375rem;
+}
+
+.detail {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+}
+
+.change {
+  font-size: 0.6875rem;
+  color: var(--text-faint);
+}

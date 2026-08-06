@@ -3,9 +3,20 @@ import api, { getToken, setToken, clearToken } from '../lib/api.js';
 
 const UserContext = createContext(null);
 
+const RETRY_DELAYS_MS = [1000, 2000, 4000, 8000, 16000]; // ~31s total — covers a cold Render backend waking up
+
+function wait(ms) {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
 export function UserProvider({ children }) {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
+  // True when we have a token but couldn't confirm it with the server after
+  // retrying — distinct from "no session at all", so the UI can say
+  // "reconnecting" instead of bouncing to onboarding and implying the
+  // account/data is gone.
+  const [connectionError, setConnectionError] = useState(false);
 
   useEffect(() => {
     if (!getToken()) {
@@ -13,10 +24,42 @@ export function UserProvider({ children }) {
       return;
     }
 
-    api.get('/auth/me')
-      .then((res) => setUser(res.data))
-      .catch(() => clearToken())
-      .finally(() => setLoading(false));
+    let cancelled = false;
+
+    async function rehydrate() {
+      for (let attempt = 0; attempt <= RETRY_DELAYS_MS.length; attempt++) {
+        try {
+          const res = await api.get('/auth/me');
+          if (!cancelled) {
+            setUser(res.data);
+            setConnectionError(false);
+          }
+          return;
+        } catch (err) {
+          // Only an explicit 401 means the token itself is bad — anything
+          // else (network error, timeout, 502/503 from a cold-starting
+          // host) is a connectivity problem, not a sign-out, so the token
+          // must NOT be cleared for those cases.
+          if (err.response?.status === 401) {
+            clearToken();
+            if (!cancelled) setConnectionError(false);
+            return;
+          }
+          if (attempt < RETRY_DELAYS_MS.length) {
+            await wait(RETRY_DELAYS_MS[attempt]);
+          }
+        }
+      }
+      if (!cancelled) setConnectionError(true);
+    }
+
+    rehydrate().finally(() => {
+      if (!cancelled) setLoading(false);
+    });
+
+    return () => {
+      cancelled = true;
+    };
   }, []);
 
   useEffect(() => {
@@ -67,7 +110,17 @@ export function UserProvider({ children }) {
 
   return (
     <UserContext.Provider
-      value={{ user, loading, register, login, continueAsGuest, upgradeGuest, updateUser, logout }}
+      value={{
+        user,
+        loading,
+        connectionError,
+        register,
+        login,
+        continueAsGuest,
+        upgradeGuest,
+        updateUser,
+        logout,
+      }}
     >
       {children}
     </UserContext.Provider>

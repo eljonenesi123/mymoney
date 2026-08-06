@@ -4,7 +4,10 @@ import styles from './SplashScreen.module.css';
 function SplashScreen({ fadingOut }) {
   return (
     <div className={styles.splash} data-fading={fadingOut}>
-      <img src={logo} alt="MyMoney" className={styles.logo} />
+      <div className={styles.content}>
+        <img src={logo} alt="" className={styles.logo} />
+        <span className={styles.name}>MyMoney</span>
+      </div>
     </div>
   );
 }

@@ -16,10 +16,25 @@
   opacity: 0;
 }
 
-.logo {
-  width: 96px;
-  height: 96px;
+.content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
   animation: pop 0.5s ease;
+}
+
+.logo {
+  width: clamp(112px, 34vw, 144px);
+  height: clamp(112px, 34vw, 144px);
+}
+
+.name {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: 1.5rem;
+  letter-spacing: -0.01em;
+  color: var(--text);
 }
 
 @keyframes pop {
@@ -34,7 +49,7 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .logo {
+  .content {
     animation: none;
   }
 }

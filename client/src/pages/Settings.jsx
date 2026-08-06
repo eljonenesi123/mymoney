@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useUser } from '../context/UserContext.jsx';
+import { useTheme } from '../context/ThemeContext.jsx';
 import styles from './Settings.module.css';
 
 const CURRENCIES = [
@@ -10,6 +11,7 @@ const CURRENCIES = [
 
 function Settings() {
   const { user, updateUser, upgradeGuest, logout } = useUser();
+  const { theme, toggleTheme } = useTheme();
   const navigate = useNavigate();
   const [income, setIncome] = useState(user?.monthlyIncome ?? '');
   const [currency, setCurrency] = useState(user?.currency ?? 'ALL');
@@ -65,6 +67,24 @@ function Settings() {
       <div className={`card ${styles.card}`}>
         <span className="eyebrow">{user?.isGuest ? 'Guest name' : 'Username'}</span>
         <p className={styles.name}>{user?.isGuest ? user?.name : user?.username}</p>
+      </div>
+
+      <div className={`card ${styles.themeCard}`}>
+        <div>
+          <span className="eyebrow">Appearance</span>
+          <p className={styles.themeLabel}>{theme === 'dark' ? 'Dark mode' : 'Light mode'}</p>
+        </div>
+        <button
+          type="button"
+          role="switch"
+          aria-checked={theme === 'dark'}
+          aria-label="Toggle dark mode"
+          className={styles.themeToggle}
+          data-on={theme === 'dark'}
+          onClick={toggleTheme}
+        >
+          <span className={styles.themeToggleThumb} />
+        </button>
       </div>
 
       {user?.isGuest && (

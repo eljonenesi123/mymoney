@@ -71,3 +71,43 @@
 
   --phone-width: 430px;
 }
+
+/* Dark mode — opt-in via a manual toggle (persisted in localStorage,
+   applied as data-theme="dark" on <html>), not automatic based on system
+   preference. Same gold accent throughout for brand consistency; every
+   other token re-verified WCAG AA against these darker surfaces. */
+:root[data-theme='dark'] {
+  --page-bg: #0f1620;
+  --bg: #16202b;
+  --card: #1e2a38;
+  --card-raised: #24323f;
+  --border: rgba(255, 255, 255, 0.09);
+  --border-strong: rgba(255, 255, 255, 0.18);
+
+  --text: #f2efe4;
+  --text-muted: #81878d; /* 4.52:1 on --bg */
+  --text-faint: #656c73; /* 3.09:1 — placeholders only */
+
+  --accent: #d4a857; /* unchanged — 6.61:1 on --card, still reads AA fine */
+  --accent-soft: rgba(212, 168, 87, 0.18);
+
+  --secondary: #a67c4e;
+  --secondary-soft: rgba(166, 124, 78, 0.18);
+  --secondary-text: #af8960; /* lightened for on-dark text/links, 4.55:1 */
+
+  --positive: #6b8f6b;
+  --positive-soft: rgba(107, 143, 107, 0.18);
+  --positive-text: #779877; /* lightened for amount text, 4.53:1 */
+
+  --negative: #c98b6e;
+  --negative-soft: rgba(201, 139, 110, 0.18);
+  --negative-text: #c98b6e; /* already 5.13:1 on --card unmodified */
+
+  /* Nav stays a distinguishable dark surface rather than doubling as the
+     "light vs dark UI" contrast anchor it was in light mode. */
+  --nav-bg: #0b1119;
+  --nav-text: #ffffff;
+  --nav-text-muted: #8b929a;
+
+  --shadow-card: 0 8px 24px rgba(0, 0, 0, 0.35);
+}

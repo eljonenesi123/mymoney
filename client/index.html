@@ -15,6 +15,14 @@
   </head>
   <body>
     <div id="root"></div>
+    <!-- Applies the saved theme before React mounts/paints, so switching
+         between light and dark doesn't flash the wrong one on load. -->
+    <script>
+      try {
+        var theme = localStorage.getItem('expense-tracker:theme');
+        if (theme === 'dark') document.documentElement.dataset.theme = 'dark';
+      } catch (e) {}
+    </script>
     <!-- Decodes the redirect from 404.html back into a real URL before the
          app mounts, so React Router sees the original deep link. No-op
          locally and on hosts with real server-side routing. -->
