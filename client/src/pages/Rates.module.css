@@ -1,7 +1,7 @@
 .page {
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: 16px;
   padding-top: 8px;
 }
 
@@ -9,20 +9,6 @@
   color: var(--text-muted);
   text-align: center;
   padding: 32px 0;
-}
-
-.homeCard {
-  flex-direction: row;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
-}
-
-.homeHint {
-  color: var(--text-muted);
-  font-size: 0.8125rem;
-  margin-top: 2px;
-  max-width: 220px;
 }
 
 .staleNotice {
@@ -33,58 +19,136 @@
   border-color: var(--accent);
 }
 
-.rateList {
+.headline {
   display: flex;
   flex-direction: column;
-  gap: 14px;
+  gap: 4px;
+  align-items: flex-start;
 }
 
-.rateCard {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
-
-.rateHead {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-}
-
-.flag {
-  font-size: 1.75rem;
-  line-height: 1;
-}
-
-.rateTitleGroup {
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-}
-
-.rateName {
-  font-family: var(--font-display);
-  font-weight: 700;
-  font-size: 1.0625rem;
-  color: var(--text);
-}
-
-.rateCode {
-  font-size: 0.75rem;
+.headlineLabel {
+  font-size: 0.9375rem;
   color: var(--text-muted);
-  font-family: var(--font-mono);
-  letter-spacing: 0.04em;
+  font-weight: 600;
 }
 
-.rateValue {
-  font-family: var(--font-mono);
-  font-variant-numeric: tabular-nums;
-  font-weight: 700;
-  font-size: 1.25rem;
+.headlineValue {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: 2rem;
+  letter-spacing: -0.02em;
   color: var(--text);
 }
 
 .updated {
+  font-size: 0.75rem;
+  color: var(--text-faint);
+  margin-top: 2px;
+  margin-bottom: 12px;
+}
+
+.pickerRow {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+}
+
+.swapButton {
+  flex-shrink: 0;
+  width: 36px;
+  height: 36px;
+  border-radius: 999px;
+  border: 1px solid var(--border-strong);
+  background: var(--card-raised);
+  color: var(--text);
+  font-size: 1rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.swapButton:hover {
+  background: var(--accent-soft);
+  border-color: var(--accent);
+}
+
+.amountRow {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: 100%;
+  margin-top: 12px;
+}
+
+.amountField {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.amountField .input {
+  flex: 1;
+}
+
+.chartCard {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.trendChart {
+  width: 100%;
+  height: 150px;
+}
+
+.chartEmpty {
+  color: var(--text-muted);
+  font-size: 0.8125rem;
+  text-align: center;
+  padding: 24px 0;
+  margin: 0;
+}
+
+.tooltip {
+  background: var(--card-raised);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-sm);
+  padding: 8px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  font-size: 0.8125rem;
+  box-shadow: var(--shadow-card);
+}
+
+.quickList {
+  display: flex;
+  gap: 8px;
+}
+
+.quickChip {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  padding: 12px 8px;
+  border: 1px solid transparent;
+  cursor: pointer;
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--text-muted);
+}
+
+.quickChipActive {
+  border-color: var(--accent);
+  color: var(--text);
+  background: var(--accent-soft);
+}
+
+.hint {
   text-align: center;
   color: var(--text-faint);
   font-size: 0.75rem;

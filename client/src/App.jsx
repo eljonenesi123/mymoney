@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { UserProvider } from './context/UserContext.jsx';
 import { ThemeProvider } from './context/ThemeContext.jsx';
 import RequireUser from './components/RequireUser.jsx';
@@ -10,7 +10,6 @@ import Dashboard from './pages/Dashboard.jsx';
 import AddExpense from './pages/AddExpense.jsx';
 import ExpenseHistory from './pages/ExpenseHistory.jsx';
 import Insights from './pages/Insights.jsx';
-import Goals from './pages/Goals.jsx';
 import Bills from './pages/Bills.jsx';
 import Rates from './pages/Rates.jsx';
 import Notifications from './pages/Notifications.jsx';
@@ -45,7 +44,7 @@ function App() {
               <Route path="/add" element={<AddExpense />} />
               <Route path="/history" element={<ExpenseHistory />} />
               <Route path="/insights" element={<Insights />} />
-              <Route path="/goals" element={<Goals />} />
+              <Route path="/goals" element={<Navigate to="/add?tab=goals" replace />} />
               <Route path="/bills" element={<Bills />} />
               <Route path="/rates" element={<Rates />} />
               <Route path="/notifications" element={<Notifications />} />

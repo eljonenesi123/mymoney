@@ -6,6 +6,7 @@ import { createExpense } from '../lib/expenses.js';
 import api from '../lib/api.js';
 import ReceiptScanner from '../components/ReceiptScanner.jsx';
 import CategoryPicker from '../components/CategoryPicker.jsx';
+import Goals from './Goals.jsx';
 import styles from './AddExpense.module.css';
 
 function todayInputValue() {
@@ -38,6 +39,7 @@ function AddExpense() {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const autoOpenScan = searchParams.get('scan') === '1';
+  const [tab, setTab] = useState(searchParams.get('tab') === 'goals' ? 'goals' : 'expense');
   const [categories, setCategories] = useState([]);
   const [amount, setAmount] = useState('');
   const [merchant, setMerchant] = useState('');
@@ -190,14 +192,39 @@ function AddExpense() {
     <div className={styles.page}>
       <div>
         <span className="eyebrow">New entry</span>
-        <h1>Add expense</h1>
+        <h1>{tab === 'expense' ? 'Add expense' : 'Savings goals'}</h1>
       </div>
 
-      <ReceiptScanner onScanned={handleScanned} autoOpen={autoOpenScan} />
-      {scanNotice && <p className={styles.scanNotice}>{scanNotice}</p>}
-      {!scanNotice && draftNotice && <p className={styles.scanNotice}>{draftNotice}</p>}
+      <div className={styles.tabs} role="tablist">
+        <button
+          type="button"
+          role="tab"
+          aria-selected={tab === 'expense'}
+          className={tab === 'expense' ? styles.tabActive : styles.tab}
+          onClick={() => setTab('expense')}
+        >
+          💸 Expense
+        </button>
+        <button
+          type="button"
+          role="tab"
+          aria-selected={tab === 'goals'}
+          className={tab === 'goals' ? styles.tabActive : styles.tab}
+          onClick={() => setTab('goals')}
+        >
+          🐷 Goals
+        </button>
+      </div>
 
-      <form onSubmit={handleSubmit} className={styles.form}>
+      {tab === 'goals' ? (
+        <Goals />
+      ) : (
+        <>
+          <ReceiptScanner onScanned={handleScanned} autoOpen={autoOpenScan} />
+          {scanNotice && <p className={styles.scanNotice}>{scanNotice}</p>}
+          {!scanNotice && draftNotice && <p className={styles.scanNotice}>{draftNotice}</p>}
+
+          <form onSubmit={handleSubmit} className={styles.form}>
         <div className="field">
           <label htmlFor="amount">Amount</label>
           <input
@@ -288,7 +315,9 @@ function AddExpense() {
         <button type="submit" className="btn btn-primary" disabled={submitting || !amount || !categoryId}>
           {submitting ? 'Saving…' : 'Save expense'}
         </button>
-      </form>
+          </form>
+        </>
+      )}
     </div>
   );
 }

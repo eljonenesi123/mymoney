@@ -1,5 +1,6 @@
 import { Router } from 'express';
 import RateCache from '../models/RateCache.js';
+import RateHistory from '../models/RateHistory.js';
 import { requireAuth } from '../middleware/auth.js';
 
 const router = Router();
@@ -29,6 +30,10 @@ async function fetchFreshRates() {
   return rates;
 }
 
+function todayKey() {
+  return new Date().toISOString().slice(0, 10);
+}
+
 // Serves rates from a shared 24h cache. If a refresh is due but the live
 // fetch fails (API down, monthly quota hit), falls back to the last cached
 // values with a `stale: true` flag rather than erroring the page out.
@@ -49,6 +54,11 @@ router.get('/', async (req, res, next) => {
         { base: BASE, rates, fetchedAt },
         { upsert: true },
       );
+      await RateHistory.findOneAndUpdate(
+        { base: BASE, date: todayKey() },
+        { base: BASE, date: todayKey(), rates },
+        { upsert: true },
+      );
       return res.json({ base: BASE, rates, updatedAt: fetchedAt, stale: false });
     } catch (fetchErr) {
       if (cached) {
@@ -63,6 +73,18 @@ router.get('/', async (req, res, next) => {
       console.error('Exchange rate fetch failed with no cache available:', fetchErr.message);
       return res.status(502).json({ error: "Couldn't load exchange rates. Try again shortly." });
     }
+  } catch (err) {
+    next(err);
+  }
+});
+
+// Whatever daily snapshots we've collected so far (starts empty and grows
+// by one point per day from when this feature shipped — see the note in
+// fetchFreshRates's caller above).
+router.get('/history', async (req, res, next) => {
+  try {
+    const points = await RateHistory.find({ base: BASE }).sort({ date: 1 }).limit(365);
+    res.json(points.map((p) => ({ date: p.date, rates: p.rates })));
   } catch (err) {
     next(err);
   }

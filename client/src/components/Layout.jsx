@@ -5,14 +5,13 @@ import api from '../lib/api.js';
 import logo from '../assets/logo-small.png';
 import styles from './Layout.module.css';
 
-// Short labels — seven tabs on a 375px-wide phone leaves little room per
-// item, and clipped text (e.g. "Dashboard" losing its edges) is worse than
-// a slightly terser label. Page headers still use the full names.
+// Goals now lives as a tab inside the Add page rather than its own bottom
+// nav slot — one less item to squeeze onto a 375px-wide phone, and it's a
+// natural fit next to "add an expense" (both are "put money somewhere").
 const NAV_ITEMS = [
   { to: '/', label: 'Home', icon: '🏠', end: true },
   { to: '/add', label: 'Add', icon: '➕', end: false },
   { to: '/history', label: 'History', icon: '📜', end: false },
-  { to: '/goals', label: 'Goals', icon: '🐷', end: false },
   { to: '/bills', label: 'Bills', icon: '📅', end: false },
   { to: '/rates', label: 'Rates', icon: '💱', end: false },
   { to: '/insights', label: 'Stats', icon: '📊', end: false },
