@@ -2,6 +2,7 @@ import { NavLink, Outlet, useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { useUser } from '../context/UserContext.jsx';
 import api from '../lib/api.js';
+import logo from '../assets/logo-small.png';
 import styles from './Layout.module.css';
 
 const NAV_ITEMS = [
@@ -40,7 +41,8 @@ function Layout() {
     <div className={styles.shell}>
       <header className={styles.header}>
         <span className={styles.brand}>
-          <span className={styles.brandMark}>●</span>MyMoney
+          <img src={logo} alt="" className={styles.brandMark} />
+          MyMoney
         </span>
         <div className={styles.headerActions}>
           <button
