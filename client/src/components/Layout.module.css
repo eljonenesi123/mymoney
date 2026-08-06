@@ -1,21 +1,36 @@
+/* App shell: an exact-height flex column with header/nav pinned as
+   flex-shrink:0 items and only .main scrolling internally. This is
+   deliberately NOT position: sticky/fixed for the header/nav — sticky
+   positioning only "sticks" relative to how much the page has scrolled,
+   and on short-content pages (e.g. an empty state) there's nothing to
+   scroll, which is what let the nav appear to drift or stop partway up.
+   Pinning them via flex layout instead means their position never
+   depends on content length or scroll state at all. */
 .shell {
   display: flex;
   flex-direction: column;
-  min-height: 100svh;
+  /* svh fallback for browsers without dvh support (Safari <15.4 etc).
+     dvh (dynamic viewport height) tracks the actual visible area as
+     mobile browser chrome collapses/expands; plain vh doesn't, which is
+     the other half of what caused the nav to visually jump. */
+  height: 100svh;
+  height: 100dvh;
   background: var(--bg);
+  overflow: hidden;
 }
 
 /* Header and bottom nav are the app's "dark UI" elements — a navy bar
    anchoring navigation against the light content area. */
 .header {
+  flex-shrink: 0;
   display: flex;
   align-items: center;
   justify-content: space-between;
   padding: 20px 20px 16px;
-  position: sticky;
-  top: 0;
+  /* Respect the device's status bar / notch instead of drawing under it
+     (viewport-fit=cover in index.html is what makes this value non-zero). */
+  padding-top: calc(20px + env(safe-area-inset-top));
   background: var(--nav-bg);
-  z-index: 10;
 }
 
 .headerActions {
@@ -80,14 +95,17 @@
 
 .main {
   flex: 1;
+  min-height: 0; /* let this flex item shrink below its content size so it scrolls instead of pushing .nav off-screen */
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior-y: contain;
   padding: 4px 20px 24px;
 }
 
 .nav {
+  flex-shrink: 0;
   display: flex;
   border-top: 1px solid rgba(255, 255, 255, 0.1);
-  position: sticky;
-  bottom: 0;
   background: rgba(44, 62, 76, 0.94);
   backdrop-filter: blur(12px);
   padding-bottom: env(safe-area-inset-bottom);
