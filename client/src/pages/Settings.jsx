@@ -9,7 +9,7 @@ const CURRENCIES = [
 ];
 
 function Settings() {
-  const { user, updateUser, startUpgrade, verifyUpgrade, resendUpgradeCode, logout } = useUser();
+  const { user, updateUser, upgradeGuest, logout } = useUser();
   const navigate = useNavigate();
   const [income, setIncome] = useState(user?.monthlyIncome ?? '');
   const [currency, setCurrency] = useState(user?.currency ?? 'ALL');
@@ -17,18 +17,10 @@ function Settings() {
   const [saved, setSaved] = useState(false);
   const [error, setError] = useState('');
 
-  const [upgradeStep, setUpgradeStep] = useState('form'); // form | verify
   const [upgradeUsername, setUpgradeUsername] = useState('');
-  const [upgradeEmail, setUpgradeEmail] = useState('');
   const [upgradePassword, setUpgradePassword] = useState('');
-  const [upgradeCode, setUpgradeCode] = useState('');
   const [upgrading, setUpgrading] = useState(false);
   const [upgradeError, setUpgradeError] = useState('');
-  const [upgradeNotice, setUpgradeNotice] = useState('');
-
-  function apiErrorMessage(err, fallback) {
-    return err.response?.data?.error || fallback;
-  }
 
   async function handleSubmit(e) {
     e.preventDefault();
@@ -45,41 +37,16 @@ function Settings() {
     }
   }
 
-  async function handleStartUpgrade(e) {
+  async function handleUpgrade(e) {
     e.preventDefault();
     setUpgrading(true);
     setUpgradeError('');
     try {
-      await startUpgrade(upgradeUsername.trim(), upgradeEmail.trim(), upgradePassword);
-      setUpgradeStep('verify');
+      await upgradeGuest(upgradeUsername.trim(), upgradePassword);
     } catch (err) {
-      setUpgradeError(apiErrorMessage(err, "Couldn't create your account. Try again."));
+      setUpgradeError(err.response?.data?.error || "Couldn't create your account. Try again.");
     } finally {
       setUpgrading(false);
-    }
-  }
-
-  async function handleVerifyUpgrade(e) {
-    e.preventDefault();
-    setUpgrading(true);
-    setUpgradeError('');
-    try {
-      await verifyUpgrade(upgradeCode.trim());
-    } catch (err) {
-      setUpgradeError(apiErrorMessage(err, "Couldn't verify that code. Try again."));
-    } finally {
-      setUpgrading(false);
-    }
-  }
-
-  async function handleResendUpgradeCode() {
-    setUpgradeError('');
-    setUpgradeNotice('');
-    try {
-      await resendUpgradeCode();
-      setUpgradeNotice('Sent a new code.');
-    } catch (err) {
-      setUpgradeError(apiErrorMessage(err, "Couldn't resend the code."));
     }
   }
 
@@ -98,11 +65,10 @@ function Settings() {
       <div className={`card ${styles.card}`}>
         <span className="eyebrow">{user?.isGuest ? 'Guest name' : 'Username'}</span>
         <p className={styles.name}>{user?.isGuest ? user?.name : user?.username}</p>
-        {!user?.isGuest && user?.email && <p className={styles.email}>{user.email}</p>}
       </div>
 
-      {user?.isGuest && upgradeStep === 'form' && (
-        <form onSubmit={handleStartUpgrade} className={`card ${styles.form}`}>
+      {user?.isGuest && (
+        <form onSubmit={handleUpgrade} className={`card ${styles.form}`}>
           <span className="eyebrow">Save your data</span>
           <p className={styles.hint}>
             You're using a guest session — it only lives on this device. Create a username and
@@ -116,19 +82,6 @@ function Settings() {
               value={upgradeUsername}
               onChange={(e) => setUpgradeUsername(e.target.value)}
               placeholder="e.g. jordan_r"
-              autoCapitalize="none"
-              autoCorrect="off"
-              className="input"
-            />
-          </div>
-          <div className="field">
-            <label htmlFor="upgradeEmail">Email</label>
-            <input
-              id="upgradeEmail"
-              type="email"
-              value={upgradeEmail}
-              onChange={(e) => setUpgradeEmail(e.target.value)}
-              placeholder="you@example.com"
               autoCapitalize="none"
               autoCorrect="off"
               className="input"
@@ -149,44 +102,9 @@ function Settings() {
           <button
             type="submit"
             className="btn btn-primary"
-            disabled={upgrading || !upgradeUsername.trim() || !upgradeEmail.trim() || !upgradePassword}
+            disabled={upgrading || !upgradeUsername.trim() || !upgradePassword}
           >
-            {upgrading ? 'Sending code…' : 'Send verification code'}
-          </button>
-        </form>
-      )}
-
-      {user?.isGuest && upgradeStep === 'verify' && (
-        <form onSubmit={handleVerifyUpgrade} className={`card ${styles.form}`}>
-          <span className="eyebrow">Check your email</span>
-          <p className={styles.hint}>
-            We sent a 6-digit code to <strong>{upgradeEmail}</strong>.
-          </p>
-          <div className="field">
-            <label htmlFor="upgradeCode">Verification code</label>
-            <input
-              id="upgradeCode"
-              type="text"
-              inputMode="numeric"
-              value={upgradeCode}
-              onChange={(e) => setUpgradeCode(e.target.value)}
-              placeholder="123456"
-              maxLength={6}
-              className="input"
-            />
-          </div>
-          {upgradeError && <p className={styles.error}>{upgradeError}</p>}
-          {upgradeNotice && <p className={styles.saved}>{upgradeNotice}</p>}
-          <button type="submit" className="btn btn-primary" disabled={upgrading || !upgradeCode.trim()}>
-            {upgrading ? 'Verifying…' : 'Verify and finish'}
-          </button>
-          <button
-            type="button"
-            className="btn btn-secondary"
-            onClick={handleResendUpgradeCode}
-            disabled={upgrading}
-          >
-            Resend code
+            {upgrading ? 'Creating…' : 'Create account'}
           </button>
         </form>
       )}

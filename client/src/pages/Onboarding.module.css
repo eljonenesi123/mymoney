@@ -35,12 +35,6 @@
   margin: 0;
 }
 
-.notice {
-  color: var(--accent);
-  font-size: 0.875rem;
-  margin: 0;
-}
-
 .skipLink {
   background: none;
   border: none;

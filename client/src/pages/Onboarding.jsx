@@ -4,18 +4,15 @@ import { useUser } from '../context/UserContext.jsx';
 import styles from './Onboarding.module.css';
 
 function Onboarding() {
-  const [mode, setMode] = useState('choose'); // choose | signup | verify | signin | guest | income
+  const [mode, setMode] = useState('choose'); // choose | signup | signin | guest | income
   const [username, setUsername] = useState('');
-  const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
-  const [code, setCode] = useState('');
   const [name, setName] = useState('');
   const [income, setIncome] = useState('');
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState('');
-  const [notice, setNotice] = useState('');
-  const { startRegister, verifyRegister, resendRegisterCode, login, continueAsGuest, updateUser } = useUser();
+  const { register, login, continueAsGuest, updateUser } = useUser();
   const navigate = useNavigate();
 
   function apiErrorMessage(err, fallback) {
@@ -31,37 +28,12 @@ function Onboarding() {
     setSubmitting(true);
     setError('');
     try {
-      await startRegister(username.trim(), email.trim(), password);
-      setSubmitting(false);
-      setMode('verify');
-    } catch (err) {
-      setError(apiErrorMessage(err, "Couldn't create your account. Try again."));
-      setSubmitting(false);
-    }
-  }
-
-  async function handleVerify(e) {
-    e.preventDefault();
-    setSubmitting(true);
-    setError('');
-    try {
-      await verifyRegister(email.trim(), code.trim());
+      await register(username.trim(), password);
       setSubmitting(false);
       setMode('income');
     } catch (err) {
-      setError(apiErrorMessage(err, "Couldn't verify that code. Try again."));
+      setError(apiErrorMessage(err, "Couldn't create your account. Try again."));
       setSubmitting(false);
-    }
-  }
-
-  async function handleResend() {
-    setError('');
-    setNotice('');
-    try {
-      await resendRegisterCode(email.trim());
-      setNotice('Sent a new code.');
-    } catch (err) {
-      setError(apiErrorMessage(err, "Couldn't resend the code."));
     }
   }
 
@@ -152,55 +124,6 @@ function Onboarding() {
     );
   }
 
-  if (mode === 'verify') {
-    return (
-      <div className={styles.container}>
-        <span className={`eyebrow ${styles.mark}`}>MyMoney</span>
-        <h1 className={styles.title}>Check your email</h1>
-        <p className={styles.subtitle}>
-          We sent a 6-digit code to <strong>{email}</strong>. Enter it below to finish creating your account.
-        </p>
-        <form onSubmit={handleVerify} className={styles.form}>
-          <div className="field">
-            <label htmlFor="code">Verification code</label>
-            <input
-              id="code"
-              type="text"
-              inputMode="numeric"
-              value={code}
-              onChange={(e) => setCode(e.target.value)}
-              placeholder="123456"
-              autoFocus
-              maxLength={6}
-              className="input"
-            />
-          </div>
-          {error && <p className={styles.error}>{error}</p>}
-          {notice && <p className={styles.notice}>{notice}</p>}
-          <button type="submit" disabled={submitting || !code.trim()} className="btn btn-primary">
-            {submitting ? 'Verifying…' : 'Verify and continue'}
-          </button>
-          <button type="button" className={styles.skipLink} onClick={handleResend} disabled={submitting}>
-            Resend code
-          </button>
-          <button
-            type="button"
-            className={styles.skipLink}
-            onClick={() => {
-              setMode('signup');
-              setCode('');
-              setError('');
-              setNotice('');
-            }}
-            disabled={submitting}
-          >
-            Back
-          </button>
-        </form>
-      </div>
-    );
-  }
-
   if (mode === 'signup' || mode === 'signin') {
     const isSignUp = mode === 'signup';
     return (
@@ -225,21 +148,6 @@ function Onboarding() {
               className="input"
             />
           </div>
-          {isSignUp && (
-            <div className="field">
-              <label htmlFor="email">Email</label>
-              <input
-                id="email"
-                type="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                placeholder="you@example.com"
-                autoCapitalize="none"
-                autoCorrect="off"
-                className="input"
-              />
-            </div>
-          )}
           <div className="field">
             <label htmlFor="password">Password</label>
             <input
@@ -267,10 +175,10 @@ function Onboarding() {
           {error && <p className={styles.error}>{error}</p>}
           <button
             type="submit"
-            disabled={submitting || !username.trim() || !password || (isSignUp && !email.trim())}
+            disabled={submitting || !username.trim() || !password}
             className="btn btn-primary"
           >
-            {submitting ? 'Please wait…' : isSignUp ? 'Send verification code' : 'Sign in'}
+            {submitting ? 'Please wait…' : isSignUp ? 'Create account' : 'Sign in'}
           </button>
           <button
             type="button"

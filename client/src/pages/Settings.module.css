@@ -36,11 +36,6 @@
   margin: 0;
 }
 
-.email {
-  font-size: 0.8125rem;
-  color: var(--text-muted);
-}
-
 .hint {
   color: var(--text-muted);
   font-size: 0.8125rem;
